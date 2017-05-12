@@ -1,0 +1,35 @@
+<div class="background">
+</div>
+
+<div class="main">
+</div>
+
+<div class="content">
+  <img src="./assets/img/logo.png" alt="Blueprint Module" class="logo">
+
+  <div class="title login-title" *ngIf="msg?.cod != 'l-01'">
+    <md-icon class="menu-icon">lock_outline</md-icon>
+  </div>
+
+  <div class="title login-title" *ngIf="msg?.cod == 'l-01'">
+    <md-icon class="menu-icon">lock_open</md-icon>
+  </div>
+
+  <form id="form">
+    <div>
+      <md-input-container>
+        <input type="text" mdInput placeholder="E-mail" #email>
+      </md-input-container>
+    </div>
+
+    <div>
+      <md-input-container>
+        <input type="password" mdInput placeholder="Password" #password>
+      </md-input-container>
+    </div>
+
+    <div>
+      <a md-raised-button (click)="login(email.value, password.value)">Entrar</a>
+    </div>
+  </form>
+</div>
