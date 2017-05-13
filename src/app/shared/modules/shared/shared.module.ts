@@ -8,11 +8,15 @@ import { DeleteConfirmComponent } from './../../components/delete-confirm/delete
 import { MenuCurrentModuleComponent } from './../../components/menu-current-module/menu-current-module.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
 
+/*Directives*/
+import { FormMultipleselectAutocompleteDirective } from './../../directives/form-multipleselect-autocomplete.directive';
+
 /*Pipes*/
 import { SearchByNamePipe } from './../../pipes/search-by-name.pipe';
 
 /*Services*/
 import { AuthenticationService } from './../../services/authentication.service';
+import { CrudService } from './../../services/crud.service';
 
 /*Validators*/
 import { MyValidators } from './../../validators/my-validators';
@@ -29,6 +33,7 @@ import { TextMaskModule } from 'angular2-text-mask';
   ],
   declarations: [
     DeleteConfirmComponent,
+    FormMultipleselectAutocompleteDirective,
     MenuCurrentModuleComponent,
     PageNotFoundComponent,
     SearchByNamePipe
@@ -36,12 +41,14 @@ import { TextMaskModule } from 'angular2-text-mask';
   exports: [
     MaterialModule,
     DeleteConfirmComponent,
+    FormMultipleselectAutocompleteDirective,
     MenuCurrentModuleComponent,
     PageNotFoundComponent,
     SearchByNamePipe
   ],
   providers: [
     AuthenticationService,
+    CrudService,
     MyValidators
   ],
   entryComponents: [

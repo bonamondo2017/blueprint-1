@@ -1,0 +1,68 @@
+<div class="float-left w49p">
+  <md-card>
+    <md-card-title>
+      SOMETHINGS
+    </md-card-title>
+  </md-card>
+
+  <form [formGroup]="somethingChildForm">
+    <md-card>
+      <md-input-container class="w100p">
+        <input type="text"
+        formControlName="field_0_simpleInput"
+        [ngModel]="somethingChild?.simpleInput"
+        mdInput placeholder="Simple Input">
+        <md-error *ngIf="somethingChildForm.controls.field_0_simpleInput.hasError('required') && somethingChildForm.controls.field_0_simpleInput.touched">
+          Campo obrigatório
+        </md-error>
+
+        <md-error *ngIf="somethingChildForm.controls.field_0_simpleInput.hasError('minlength') && somethingChildForm.controls.field_0_simpleInput.touched">
+          Mínimo de 10 caracteres
+        </md-error>
+      </md-input-container>      
+    </md-card>
+
+    <md-card>
+      <md-select placeholder="Simple Select" 
+      [ngModel]="somethingChild?.simpleSelect" 
+      formControlName="field_0_simpleSelect">
+        <md-option *ngFor="let thing of thingsToSelect" [value]="thing.id">
+          {{thing.description}}
+        </md-option>
+      </md-select>
+    </md-card>
+
+    <!-- Button para cadastrar o product group -->
+    <md-card>
+      <md-card-actions>
+        <div *ngIf="somethingChild == undefined">
+          <a md-raised-button (click)="create()" [disabled]="!somethingChildForm.valid">Create</a>
+        </div>
+
+        <div *ngIf="somethingChild != undefined">
+          <a md-raised-button (click)="update()" [disabled]="!somethingChildForm.valid">Update</a>
+        </div>
+      </md-card-actions>
+    </md-card>
+  </form>
+</div>
+
+<div class="float-right w49p">
+  <md-card>
+    <md-card-title>
+      LIST OF SOMETHINGS
+    </md-card-title>
+    <span *ngIf="isLoading"><md-progress-bar mode="indeterminate"></md-progress-bar></span>
+    <span *ngIf="!isLoading && !somethingsChild"> There is nothing in this list </span>
+    <div *ngFor="let somethingChild of somethingsChild;">
+      <span *ngIf="!isLoading" class="w80p">
+        <a (click)="delete(somethingChild.__key)">
+          <md-icon>delete_forever</md-icon>
+        </a>
+        <a (click)="readSomethingChild(somethingChild.simpleInput)">{{ somethingChild.simpleInput }}</a>        
+      </span>
+    </div>
+  </md-card>
+</div>
+
+<div class="clear-both"></div>

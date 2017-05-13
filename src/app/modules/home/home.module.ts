@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /*Components*/
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { FormComponent } from './components/form/form.component';
 import { ProfileComponent } from './components/profile/profile.component';
 import { HomeComponent } from './components/home/home.component';
 
@@ -23,6 +24,7 @@ import { SharedModule } from './../../shared/modules/shared/shared.module';
   ],
   declarations: [
     DashboardComponent,
+    FormComponent,
     ProfileComponent,
     HomeComponent
   ]

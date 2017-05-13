@@ -1,0 +1,17 @@
+@media screen and (min-width: 900px) {
+  #content {
+    margin: auto;
+    position: absolute;
+    top: 150px; left: 0; bottom: 0; right: 0;
+    width: 80%;
+  }
+}
+
+@media screen and (max-width: 899px) {
+  #content {
+    margin: auto;
+    position: absolute;
+    top: 150px; left: 0; bottom: 0; right: 0;
+    width: 90%;
+  }
+}

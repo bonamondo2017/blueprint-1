@@ -27,8 +27,24 @@
   </div>
 
   <md-toolbar-row>
-    <md-icon class="sidenav-item-icon">mode_edit</md-icon> 
-    <span class="sidenav-item">Form example</span>
+    <a routerLink="/home/dashboard" (click)="toggleSidenav()">
+      <md-icon class="sidenav-item-icon">dashboard</md-icon> 
+      <span class="sidenav-item">Dashboard example</span>
+    </a>
+  </md-toolbar-row>
+
+  <md-toolbar-row>
+    <a routerLink="/home/form" (click)="toggleSidenav()">
+      <md-icon class="sidenav-item-icon">mode_edit</md-icon> 
+      <span class="sidenav-item">Form group example</span>
+    </a>
+  </md-toolbar-row>
+
+  <md-toolbar-row>
+    <a routerLink="/home/form-builder" (click)="toggleSidenav()">
+      <md-icon class="sidenav-item-icon">mode_edit</md-icon> 
+      <span class="sidenav-item">Form builder example</span>
+    </a>
   </md-toolbar-row>
 
   <md-toolbar-row>
