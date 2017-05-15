@@ -39,7 +39,8 @@ export class FormComponent implements OnInit {
   ) {
     this.somethingChildForm = new FormGroup({
       'field_0_simpleInput': new FormControl('', [Validators.required, Validators.minLength(10)]),
-      'field_0_simpleSelect': new FormControl('', Validators.required)
+      'field_0_simpleSelect': new FormControl('', Validators.required),
+      'field_0_multipleChoicesAutocomplete': new FormControl('', Validators.required)
     });
 
     this.thingsToSelect = [
