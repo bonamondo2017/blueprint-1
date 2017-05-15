@@ -5,21 +5,22 @@
     </md-card-title>
   </md-card>
 
-  <form [formGroup]="somethingChildForm">
+  <form [formGroup]="somethingChildForm" (ngSubmit)="onSubmit()" >
     <md-card>
       <md-input-container class="w100p">
         <input type="text"
         formControlName="field_0_simpleInput"
         [ngModel]="somethingChild?.simpleInput"
         mdInput placeholder="Simple Input">
-        <md-error *ngIf="somethingChildForm.controls.field_0_simpleInput.hasError('required') && somethingChildForm.controls.field_0_simpleInput.touched">
-          Campo obrigatório
-        </md-error>
+      </md-input-container>
 
-        <md-error *ngIf="somethingChildForm.controls.field_0_simpleInput.hasError('minlength') && somethingChildForm.controls.field_0_simpleInput.touched">
-          Mínimo de 10 caracteres
-        </md-error>
-      </md-input-container>      
+      <md-error *ngIf="somethingChildForm.controls.field_0_simpleInput.hasError('required') && somethingChildForm.controls.field_0_simpleInput.touched">
+        Campo obrigatório
+      </md-error>
+
+      <md-error *ngIf="somethingChildForm.controls.field_0_simpleInput.hasError('minlength') && somethingChildForm.controls.field_0_simpleInput.touched">
+        Mínimo de 10 caracteres
+      </md-error>
     </md-card>
 
     <md-card>
@@ -28,19 +29,23 @@
       formControlName="field_0_simpleSelect">
         <md-option *ngFor="let thing of thingsToSelect" [value]="thing.id">
           {{thing.description}}
-        </md-option>
+        </md-option>        
       </md-select>
+
+      <md-error class="select-error" *ngIf="somethingChildForm.controls.field_0_simpleSelect.hasError('required') && somethingChildForm.controls.field_0_simpleSelect.touched">
+        Campo obrigatório
+      </md-error>
     </md-card>
 
     <!-- Button para cadastrar o product group -->
     <md-card>
       <md-card-actions>
         <div *ngIf="somethingChild == undefined">
-          <a md-raised-button (click)="create()" [disabled]="!somethingChildForm.valid">Create</a>
+          <button type="submit" md-raised-button (click)="onSubmit()" [disabled]="!somethingChildForm.valid">Create</button>
         </div>
 
         <div *ngIf="somethingChild != undefined">
-          <a md-raised-button (click)="update()" [disabled]="!somethingChildForm.valid">Update</a>
+          <button type="submit" md-raised-button (click)="onSubmit()" [disabled]="!somethingChildForm.valid">Update</button>
         </div>
       </md-card-actions>
     </md-card>

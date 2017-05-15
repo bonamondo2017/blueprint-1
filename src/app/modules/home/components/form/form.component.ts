@@ -30,7 +30,6 @@ export class FormComponent implements OnInit {
   somethingChild: any;
   somethingChildObject: SomethingsChild;
   somethingChildForm: FormGroup;
-
   thingsToSelect: any;
   
   constructor(
@@ -54,7 +53,6 @@ export class FormComponent implements OnInit {
     this.readSomethingsChild();
   }
   
-  /* Method para cadastrar um product class no banco */
   create = () => {
     this.somethingChildObject = this.somethingChildForm.value;
     if(this.somethingChildForm.valid){ // Verifica se o FormGroup é válido
@@ -65,7 +63,6 @@ export class FormComponent implements OnInit {
     }
   }
   
-  /* Method para deletar um product universe no banco */
   delete = (value) => {
     let dialogRef = this.dialog.open(
       DeleteConfirmComponent, 
@@ -79,12 +76,19 @@ export class FormComponent implements OnInit {
       }
     );
     
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe(() => {
       this.readSomethingsChild();
     });
   }
-  
-  /* Method para trazer todos products class cadastrado no banco */
+
+  onSubmit = () => {
+    if(this.somethingChild) {
+      this.update();
+    } else {
+      this.create();
+    }
+  }
+
   readSomethingsChild = () => {
     this.crud.readArray({
       child: 'somethingsChild'
@@ -104,11 +108,10 @@ export class FormComponent implements OnInit {
     })
   }
 
-  /* Method para trazer um único product class cadastrado no banco */
   readSomethingChild = (value) => {
     this.crud.readObject({
       child: 'somethingsChild',
-      orderByChild: 'name',
+      orderByChild: 'simpleInput',
       equalTo: value
     })
     .then(res => {
@@ -119,7 +122,6 @@ export class FormComponent implements OnInit {
     })
   }
 
-  /* Method para atualizar um product class no banco */
   update = () => {
     this.somethingChildObject = this.somethingChildForm.value;
     

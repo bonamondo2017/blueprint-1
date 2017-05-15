@@ -1,5 +1,7 @@
 import { FormControl } from '@angular/forms';
 
+import { AuthenticationService } from './../services/authentication.service';
+
 export class MyValidators {
   cpf = (control: FormControl) => {
     let CPF_REGEXP = /^([0-9]{2}[\.]?[0-9]{3}[\.]?[0-9]{3}[\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2})$/;

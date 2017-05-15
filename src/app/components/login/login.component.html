@@ -15,7 +15,7 @@
     <md-icon class="menu-icon">lock_open</md-icon>
   </div>
 
-  <form id="form">
+  <form id="form" (ngSubmit)="login(email.value, password.value)">
     <div>
       <md-input-container>
         <input type="text" mdInput placeholder="E-mail" #email>
@@ -29,7 +29,7 @@
     </div>
 
     <div>
-      <a md-raised-button (click)="login(email.value, password.value)">Entrar</a>
+      <button md-raised-button type="submit">Entrar</button>
     </div>
   </form>
 </div>
