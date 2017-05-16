@@ -4,7 +4,22 @@
   <span></span>
 
   <span class="spacer"></span>
-  
+
+  <!--account_circle start-->
+  <md-icon md-button [mdMenuTriggerFor]="accountSettings"><a>account_circle</a></md-icon>
+  <md-menu #accountSettings="mdMenu" [overlapTrigger]="false" yPosition="below">
+    <button md-menu-item>
+      <md-icon>person</md-icon> 
+      <span>Profile</span>
+    </button>
+
+    <button md-menu-item (click)="logout()">
+      <md-icon>power_settings_new</md-icon> 
+      <span>Logout</span>
+    </button>
+  </md-menu>
+  <!--account_circle end-->
+
   <!--view_module start-->
   <md-icon md-button [mdMenuTriggerFor]="viewModule"><a>view_module</a></md-icon>
   <md-menu #viewModule="mdMenu" [overlapTrigger]="false" yPosition="below">

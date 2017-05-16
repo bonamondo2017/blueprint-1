@@ -3,13 +3,21 @@ md-toolbar {
 }
 
 md-toolbar-row:hover {
-    border: 1px solid rgba(200, 200, 200, 1);
-    border-left: black;
-    border-right: black;
+    border-top: gray;
+    border-bottom: gray;
 }
 
 a {
     color: #fff;
+}
+
+
+.menu-item {
+    font-size: 14px;
+}
+
+.menu-item-icon {
+    font-size: 14px;
 }
 
 .sidenav {
@@ -25,7 +33,7 @@ a {
 
 .sidenav-menu {
     height: 100vh;
-    width: 40vh;
+    width: 400px;
     background: #000;
     color: #fff;
     z-index: 20;
