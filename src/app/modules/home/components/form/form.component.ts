@@ -31,6 +31,12 @@ export class FormComponent implements OnInit {
   somethingChildObject: SomethingsChild;
   somethingChildForm: FormGroup;
   thingsToSelect: any;
+  thingsRelated: any;
+  argToSearchPipe: any;
+  searchList = false;
+  searchAnswers;
+
+
   
   constructor(
     private crud: CrudService, 
@@ -47,7 +53,9 @@ export class FormComponent implements OnInit {
       { id: 1, description: "Something" },
       { id: 2, description: "Anything" },
       { id: 3, description: "Nothing" }
-    ]
+    ];
+
+    this.thingsRelated = [];
   }
 
   ngOnInit() {
@@ -133,4 +141,35 @@ export class FormComponent implements OnInit {
       this.somethingChildForm.reset(); // Apaga as informações no form
     }
   }
+
+  /* Multiple Choices Autocomplete (begin) */
+  search = (search, field) => {
+    this.argToSearchPipe = field + "_" + search;
+    if(search.length > 0) {
+      this.searchList = true;
+      this.searchAnswers = this.thingsToSelect;
+    } else {
+      this.searchList = false;
+      this.searchAnswers = null;
+    }
+  }
+  addSomeThing = (searchAnswer) => {
+    this.thingsRelated.push(searchAnswer);
+    this.somethingChildForm.controls['field_0_multipleChoicesAutocomplete'].setValue(this.thingsRelated);
+    this.searchList = false;
+    this.searchAnswers = null;
+  }
+  deleteSomeThing = (thingToDeleteId) => {
+    let index;
+    for(let i=0; i<this.thingsRelated.length; i++){
+      if(thingToDeleteId == this.thingsRelated[i].id){
+        index = i;
+        break;
+      }
+    }
+    this.thingsRelated.splice(index, 1);
+    this.somethingChildForm.controls['field_0_multipleChoicesAutocomplete'].setValue(this.thingsRelated);
+  }
+  /* Multiple Choices Autocomplete (end) */
+
 }
