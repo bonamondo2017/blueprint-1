@@ -1,35 +1,48 @@
-<div class="background">
-</div>
+<div class="background"></div>
 
-<div class="main">
-</div>
+<div class="main"></div>
 
 <div class="content">
-  <img src="./assets/img/logo.png" alt="Blueprint Module" class="logo">
-
-  <div class="title login-title" *ngIf="msg?.cod != 'l-01'">
-    <md-icon class="menu-icon">lock_outline</md-icon>
+  <div class="main-title">
+    <img src="./assets/img/logo.png" alt="Blueprint Module" class="logo">
   </div>
-
-  <div class="title login-title" *ngIf="msg?.cod == 'l-01'">
-    <md-icon class="menu-icon">lock_open</md-icon>
-  </div>
-
+  
   <form id="form" (ngSubmit)="login(email.value, password.value)">
     <div>
       <md-input-container>
+        <span md-prefix>
+          <md-icon>person_outline</md-icon>
+        </span>
+        
         <input type="text" mdInput placeholder="E-mail" #email>
       </md-input-container>
     </div>
 
     <div>
       <md-input-container>
+        <span md-prefix>
+          <md-icon>vpn_key</md-icon>
+        </span>
+        
         <input type="password" mdInput placeholder="Password" #password>
       </md-input-container>
     </div>
+    
+    <div id="remember-password">
+      <md-checkbox>Remember my password</md-checkbox>
+    </div>
 
     <div>
-      <button md-raised-button type="submit">Entrar</button>
+      <button md-raised-button type="submit" id="button-login">Login</button>
+    </div>
+    
+    <div id="forgot-password">
+      <a>Forgot you password?</a>
     </div>
   </form>
+  
+  <div id="signup">
+    <hr>
+    <a>Signup</a>
+  </div>
 </div>

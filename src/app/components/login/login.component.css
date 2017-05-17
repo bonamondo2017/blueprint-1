@@ -1,3 +1,18 @@
+hr {
+  border: 1px solid #757575;
+}
+
+md-input-container {
+  font-size: 20px;
+  text-decoration: bolder;
+  width: 76%;
+}
+
+[md-prefix] {
+  padding-right:10px;
+  font-size: 24px;
+}
+
 .background {
     position: absolute;
     width: 100%;
@@ -11,52 +26,64 @@
   margin: auto;
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
-  width: 396px;
-  height: 496px;
+  width: 46%;
+  height: 535px;
   opacity: 1;
-}
-
-.login-title {
-    position: absolute;
-    top: 210px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    text-align: center;
 }
 
 .logo {
     position: absolute;
-    top: 80px;
+    top: 0;
     margin-left: auto;
     margin-right: auto;
     left: 0;
     right: 0;
-    height: 124px;
+    height: 111px;
 }
 
 .main {
     margin: auto;
     position: absolute;
     top: 0; left: 0; bottom: 0; right: 0;
-    width: 396px;
-    height: 496px;
+    width: 46%;
+    height: 535px;
     border: none;
-    border-radius: 20px;
+    border-radius: 0;
     padding: 10px;
     background-color: #fff;
-    opacity: 0.4;
+}
+
+.main-title {
+  position: relative;
+  top: 0;
+  width: 100%;
+  height: 111px;
+  border: none;
+  border-radius: 0;
+  background-color: #757575;
+  z-index: 10;
+}
+
+#button-login {
+  width: 56%;
+  padding: 6px 0 6px 0;
+  color: #fff;
+  font-size: 20px;
+  background: #757575;
+}
+
+#forgot-password {
+  margin-top: 10px;
 }
 
 #form {
-    position: absolute;
-    top: 259px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 0;
-    right: 0;
-    text-align: center;
+  position: absolute;
+  top: 167px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
 }
 
 #msg {
@@ -67,4 +94,22 @@
     left: 0;
     right: 0;
     text-align: center;
+}
+
+#remember-password {
+  margin: -20px 0 60px 12%;
+  text-align: left;
+}
+
+#signup {
+  position: absolute;
+  top: 485px;
+  margin-left: auto;
+  margin-right: auto;
+  left: 0;
+  right: 0;
+  text-align: center;
+  text-decoration: bolder;
+  font-weight: bolder;
+  font-size: 20px;
 }
