@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-/*Components*/
-import { MenuCurrentModuleComponent } from './../../../../shared/components/menu-current-module/menu-current-module.component';
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

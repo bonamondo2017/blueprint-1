@@ -5,7 +5,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 /*Components*/
 import { DeleteConfirmComponent } from './../../components/delete-confirm/delete-confirm.component';
-import { MenuCurrentModuleComponent } from './../../components/menu-current-module/menu-current-module.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
 
 /*Directives*/
@@ -34,7 +33,6 @@ import { TextMaskModule } from 'angular2-text-mask';
   declarations: [
     DeleteConfirmComponent,
     FormMultipleselectAutocompleteDirective,
-    MenuCurrentModuleComponent,
     PageNotFoundComponent,
     SearchByNamePipe
   ],
@@ -42,7 +40,6 @@ import { TextMaskModule } from 'angular2-text-mask';
     MaterialModule,
     DeleteConfirmComponent,
     FormMultipleselectAutocompleteDirective,
-    MenuCurrentModuleComponent,
     PageNotFoundComponent,
     SearchByNamePipe
   ],
@@ -52,8 +49,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     MyValidators
   ],
   entryComponents: [
-    DeleteConfirmComponent,
-    MenuCurrentModuleComponent
+    DeleteConfirmComponent
   ]
 })
 export class SharedModule { }
