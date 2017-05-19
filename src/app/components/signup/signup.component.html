@@ -1,0 +1,74 @@
+<div class="background"></div>
+
+<div id="presentation">
+  Lado A
+</div>
+
+<div id="form">
+  <div id="form-title">
+    Crie a sua conta Blueprint
+  </div>
+
+  <div id="form-box">
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" >
+      <md-card>
+        <md-input-container class="w100p">
+          <span md-prefix>
+            <md-icon>person_outline</md-icon>
+          </span>
+
+          <input type="text" formControlName="field_1_name" mdInput placeholder="Name" autocomplete="off">
+        </md-input-container>
+
+        <md-error *ngIf="signupForm.controls.field_1_name.hasError('required') && signupForm.controls.field_1_name.touched">
+          Campo obrigatório
+        </md-error>
+
+        <md-error *ngIf="signupForm.controls.field_1_name.hasError('minlength') && signupForm.controls.field_1_name.touched">
+          Mínimo de 10 caracteres
+        </md-error>
+      </md-card>
+
+      <md-card>
+        <md-input-container class="w100p">
+          <span md-prefix>
+            <md-icon>mail_outline</md-icon>
+          </span>
+
+          <input type="text" formControlName="field_0_email" mdInput placeholder="Email" autocomplete="off">
+        </md-input-container>
+
+        <md-error *ngIf="signupForm.controls.field_0_email.hasError('required') && signupForm.controls.field_0_email.touched">
+          Campo obrigatório
+        </md-error>
+
+        <md-error *ngIf="!signupForm.controls.field_0_email.hasError('required') && signupForm.controls.field_0_email.invalid && signupForm.controls.field_0_email.touched">
+          Formato de e-mail incorreto
+        </md-error>
+
+      </md-card>
+
+      <md-card>
+        <md-input-container class="w100p">
+          <span md-prefix>
+            <md-icon>lock_open</md-icon>
+          </span>
+
+          <input type="text" formControlName="field_0_password" mdInput placeholder="Password" autocomplete="off">
+        </md-input-container>
+
+        <md-error *ngIf="signupForm.controls.field_0_password.hasError('required') && signupForm.controls.field_0_password.touched">
+          Campo obrigatório
+        </md-error>
+
+        <md-error *ngIf="signupForm.controls.field_0_password.hasError('minlength') && signupForm.controls.field_0_password.touched">
+          Mínimo de 8 caracteres
+        </md-error>
+      </md-card>
+
+      <md-card>
+        Item 4
+      </md-card>
+    </form>
+  </div>
+</div>

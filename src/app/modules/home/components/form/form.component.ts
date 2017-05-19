@@ -36,8 +36,6 @@ export class FormComponent implements OnInit {
   searchList = false;
   searchAnswers;
 
-
-  
   constructor(
     private crud: CrudService, 
     public dialog: MdDialog,

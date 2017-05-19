@@ -9,15 +9,19 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
 
+/*Guards*/
+import { AuthGuard } from './shared/guards/auth.guard';
+
 /*Modules*/
 import { RoutingModule } from './modules/routing/routing.module';
 import { SharedModule } from './shared/modules/shared/shared.module';
-
+import { SignupComponent } from './components/signup/signup.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent
+    LoginComponent,
+    SignupComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -29,7 +33,9 @@ import { SharedModule } from './shared/modules/shared/shared.module';
     RoutingModule,
     SharedModule
   ],
-  providers: [],
+  providers: [
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

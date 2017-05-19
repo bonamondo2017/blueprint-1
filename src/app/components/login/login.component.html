@@ -1,8 +1,6 @@
 <div class="background"></div>
 
-<div class="main"></div>
-
-<div class="content">
+<md-card class="content">
   <div class="main-title">
     <img src="./assets/img/logo.png" alt="Blueprint Module" class="logo">
   </div>
@@ -14,7 +12,7 @@
           <md-icon>person_outline</md-icon>
         </span>
         
-        <input type="text" mdInput placeholder="E-mail" #email>
+        <input type="text" mdInput placeholder="E-mail" #email autocomplete="off">
       </md-input-container>
     </div>
 
@@ -24,7 +22,7 @@
           <md-icon>vpn_key</md-icon>
         </span>
         
-        <input type="password" mdInput placeholder="Password" #password>
+        <input type="password" mdInput placeholder="Password" #password autocomplete="off">
       </md-input-container>
     </div>
     
@@ -37,12 +35,12 @@
     </div>
     
     <div id="forgot-password">
-      <a>Forgot you password?</a>
+      <a>Forgot your password?</a>
     </div>
   </form>
   
   <div id="signup">
     <hr>
-    <a>Signup</a>
+    <a routerLink="/signup">Signup</a>
   </div>
-</div>
+</md-card>
