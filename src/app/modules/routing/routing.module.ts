@@ -3,8 +3,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 /*Components*/
 import { LoginComponent } from './../../components/login/login.component';
+import { PageNotFoundComponent } from './../../shared/components/page-not-found/page-not-found.component';
 import { SignupComponent } from './../../components/signup/signup.component';
-//import { PageNotFoundComponent } from './../../shared/components/page-not-found/page-not-found.component';
 
 /*Guards*/
 import { AuthGuard } from './../../shared/guards/auth.guard';
@@ -30,7 +30,7 @@ export const routes: Routes = [
   },
   {
     path: '**',
-    component: LoginComponent
+    component: PageNotFoundComponent
   }
 ];
 

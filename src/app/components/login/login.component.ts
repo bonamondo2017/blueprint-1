@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MdSnackBar } from '@angular/material';
+import { MdDialog, MdDialogClose, MdSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
+
+/*Components*/
+import { ForgotPasswordComponent } from './../../shared/components/forgot-password/forgot-password.component';
 
 /*Services*/
 import { AuthenticationService } from './../../shared/services/authentication.service';
@@ -13,12 +16,20 @@ import { AuthenticationService } from './../../shared/services/authentication.se
 })
 export class LoginComponent implements OnInit {
   msg;
+  currentUser: any;
 
   constructor(
     private authentication: AuthenticationService, 
+    public dialog: MdDialog,
     public snackBar: MdSnackBar,
     private router: Router
-  ) { }
+  ) {
+    this.currentUser = authentication
+    .currentUser()
+    .then(res => {
+      console.log(res);
+    });
+  }
 
   ngOnInit() {
     if(sessionStorage.getItem('email')) {
@@ -47,5 +58,14 @@ export class LoginComponent implements OnInit {
         duration: 3000,
       });
     })
+  }
+
+  forgotPassword = () => {
+    let dialogRef = this.dialog.open(
+      ForgotPasswordComponent
+    );
+    
+    dialogRef.afterClosed().subscribe(() => {
+    });
   }
 }

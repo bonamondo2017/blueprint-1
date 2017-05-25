@@ -8,6 +8,10 @@ export class AuthenticationService {
   name: any;
   originalUsername: string;
   
+  currentUser = () => new Promise((resolve, reject) => {
+    resolve(auth())
+  });
+
   login = (email, password) => new Promise((resolve, reject) => {
     auth().signInWithEmailAndPassword(email, password)
     .then(res => {
@@ -125,6 +129,25 @@ export class AuthenticationService {
     } else {
       resolve("Email was not repeated correctly");
     }
+  })
+
+  recoverPasswordEmail = (email) => new Promise((resolve, reject) => {
+    auth().fetchProvidersForEmail(email)
+    .then(res => {
+      if(res.length > 0) {
+        auth().sendPasswordResetEmail(email);
+
+        resolve({
+          cod: "rpe-01",
+          message: "E-mail enviado. Cheque e finalize o processo."
+        })
+      } else {
+        resolve({
+          cod: "rpe-02",
+          message: "E-mail não cadastrado."
+        })
+      }
+    });
   })
   
   signupCheckingUsername = (email, password, username, number) => new Promise((resolve, reject) => {
