@@ -24,11 +24,7 @@ export class LoginComponent implements OnInit {
     public snackBar: MdSnackBar,
     private router: Router
   ) {
-    this.currentUser = authentication
-    .currentUser()
-    .then(res => {
-      console.log(res);
-    });
+    
   }
 
   ngOnInit() {

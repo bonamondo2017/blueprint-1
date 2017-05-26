@@ -14,14 +14,13 @@ export class HomeComponent implements OnInit {
   currentUser: any;
 
   constructor(private router: Router, private authentication: AuthenticationService) {
-    this.currentUser = this.authentication.currentUser();
+    this.currentUser = this.authentication.getCurrentUser();
   }
 
   ngOnInit() {
   }
 
   logout = () => {
-    console.log(this.currentUser);
     this.authentication.logout();
     this.router.navigate(['/login']);
   }

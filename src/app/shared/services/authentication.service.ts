@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { auth, database} from 'firebase';
 
-import 'rxjs/add/operator/map';
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthenticationService {
   name: any;
   originalUsername: string;
-  
-  currentUser = () => new Promise((resolve, reject) => {
-    resolve(auth())
-  });
+
+  getCurrentUser= () => {
+    
+  }
+  /*new Promise((resolve, reject) => {
+    resolve(auth());
+  });*/
 
   login = (email, password) => new Promise((resolve, reject) => {
     auth().signInWithEmailAndPassword(email, password)

@@ -19,6 +19,7 @@ export class DeleteConfirmComponent implements OnInit {
     public dialogRef: MdDialogRef<any>,
     private crud: CrudService
   ) {
+    console.log(this.dialogRef);
     this.dataToDelete = this.dialogRef._containerInstance.dialogConfig.data;
   }
 
