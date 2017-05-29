@@ -13,9 +13,7 @@ import { AuthenticationService } from './../../../../shared/services/authenticat
 export class HomeComponent implements OnInit {
   currentUser: any;
 
-  constructor(private router: Router, private authentication: AuthenticationService) {
-    this.currentUser = this.authentication.getCurrentUser();
-  }
+  constructor(private router: Router, private authentication: AuthenticationService) { }
 
   ngOnInit() {
   }

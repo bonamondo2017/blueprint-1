@@ -7,14 +7,7 @@ import { Observable } from 'rxjs/Observable';
 export class AuthenticationService {
   name: any;
   originalUsername: string;
-
-  getCurrentUser= () => {
-    
-  }
-  /*new Promise((resolve, reject) => {
-    resolve(auth());
-  });*/
-
+  
   login = (email, password) => new Promise((resolve, reject) => {
     auth().signInWithEmailAndPassword(email, password)
     .then(res => {
@@ -27,11 +20,8 @@ export class AuthenticationService {
         .once('value')
         .then(function(snapshot) {
           that.name = snapshot.val().username;
-          sessionStorage.setItem('name', that.name);
         });
-
-        sessionStorage.setItem('email', email);
-
+        
         resolve({
           cod: "l-01",
           message: "Login successful"
@@ -54,8 +44,6 @@ export class AuthenticationService {
   logout = () => new Promise((resolve, reject) => {
     auth().signOut()
     .then(res => {
-      sessionStorage.clear();
-
       resolve({
         cod: "lo-01",
         message: res

@@ -27,11 +27,7 @@ export class LoginComponent implements OnInit {
     
   }
 
-  ngOnInit() {
-    if(sessionStorage.getItem('email')) {
-      window.location.href = '/home';
-    }
-  }
+  ngOnInit() { }
 
   login = (email, password) => {
     this.authentication.login(email, password)

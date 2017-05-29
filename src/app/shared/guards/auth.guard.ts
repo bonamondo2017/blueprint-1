@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
+import { auth, database} from 'firebase';
 
 /*Services*/
 import { AuthenticationService } from './../services/authentication.service';
@@ -17,19 +18,12 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    this.teste = this.auth.getCurrentUser();
-    /*.then(res => {
-      this.teste = res;
-      
-      console.log(this.teste);
-    });*/
-    /*let validate;
-    validate = this.auth.currentUser();
-
-    if(validate === undefined) {
-      this.router.navigate(['/login']);
-    }*/
-
+    auth().onAuthStateChanged((user) => {
+      if(!user) {
+        this.router.navigate(['/login']);
+      }
+    });
+    
     return true;
   }
 }
