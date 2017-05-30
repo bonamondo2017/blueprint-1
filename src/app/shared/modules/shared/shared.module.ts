@@ -7,6 +7,7 @@ import { Routes, RouterModule } from '@angular/router';
 /*Components*/
 import { DeleteConfirmComponent } from './../../components/delete-confirm/delete-confirm.component';
 import { ForgotPasswordComponent } from './../../components/forgot-password/forgot-password.component';
+import { FormMultipleAutocompleteComponent } from './../../components/form-multiple-autocomplete/form-multiple-autocomplete.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
 
 /*Directives*/
@@ -37,6 +38,7 @@ import { TextMaskModule } from 'angular2-text-mask';
   declarations: [
     DeleteConfirmComponent,
     ForgotPasswordComponent,
+    FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
     PageNotFoundComponent,
     SearchByNamePipe
@@ -45,6 +47,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     MaterialModule,
     DeleteConfirmComponent,
     ForgotPasswordComponent,
+    FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
     PageNotFoundComponent,
     SearchByNamePipe

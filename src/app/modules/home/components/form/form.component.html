@@ -58,8 +58,12 @@
     </md-card>
 
     <md-card>
+      <form-multiple-autocomplete class="w100p"></form-multiple-autocomplete>
+    </md-card>
+
+    <md-card>
       <md-card-actions>
-        <div *ngIf="somethingChild == undefined">
+        <div *ngIf="somethingChilmd-ind == undefined">
           <button type="submit" md-raised-button (click)="onSubmit()" [disabled]="!somethingChildForm.valid">Create</button>
         </div>
 

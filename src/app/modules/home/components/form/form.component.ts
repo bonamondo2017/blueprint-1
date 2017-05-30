@@ -4,6 +4,7 @@ import { MdDialog, MdDialogClose } from '@angular/material';
 
 /*Components*/
 import { DeleteConfirmComponent } from './../../../../shared/components/delete-confirm/delete-confirm.component';
+import { FormMultipleAutocompleteComponent } from './../../../../shared/components/form-multiple-autocomplete/form-multiple-autocomplete.component';
 
 /*Models*/
 import { SomethingsChild } from './../../../../shared/models/somethings-child';
