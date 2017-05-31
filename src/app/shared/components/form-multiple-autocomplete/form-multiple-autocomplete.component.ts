@@ -6,9 +6,12 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./form-multiple-autocomplete.component.css']
 })
 export class FormMultipleAutocompleteComponent implements OnInit {
+  @Input() class;
+
+  error: boolean = false;
+
   constructor() { }
 
   ngOnInit() {
   }
-
 }

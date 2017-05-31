@@ -1,6 +1,11 @@
-<md-input-container>
-  <md-input-container>
-    <input type="text" placeholder="Multiple Choices Autocomplete"
-    mdInput>
+<div *ngIf="!error">
+  <md-input-container class="{{class}}">
+    <input type="text" placeholder="Multiple Choices Autocomplete" mdInput>
   </md-input-container>
-</md-input-container>
+</div>
+
+<div *ngIf="error">
+  <md-error>
+    Checar requisitos para o components form-multiple-autocomplete
+  </md-error>
+</div>

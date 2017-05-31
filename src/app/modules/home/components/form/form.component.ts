@@ -37,11 +37,19 @@ export class FormComponent implements OnInit {
   searchList = false;
   searchAnswers;
 
+  /* formMultipleAutocompleteComponent Input start */
+  class;
+  /* formMultipleAutocompleteComponent Input finish */
+
   constructor(
     private crud: CrudService, 
     public dialog: MdDialog,
     private myValidators: MyValidators
   ) {
+    /* formMultipleAutocompleteComponent Input start */
+    this.class = "w100p";
+    /* formMultipleAutocompleteComponent Input end */
+
     this.somethingChildForm = new FormGroup({
       'field_0_simpleInput': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'field_0_simpleSelect': new FormControl('', Validators.required),

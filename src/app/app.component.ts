@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 
 /*Firebase*/
-import { firebaseConfig } from '../environments/firebase.config';
+import { configBlueprint } from '../environments/firebase.config';
 import { initializeApp } from 'firebase';
 
 /*Services*/
@@ -14,6 +14,6 @@ import { AuthenticationService } from './shared/services/authentication.service'
 })
 export class AppComponent {
   constructor() {
-    initializeApp(firebaseConfig);
+    initializeApp(configBlueprint);
   }
 }
