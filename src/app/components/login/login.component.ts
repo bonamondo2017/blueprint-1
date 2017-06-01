@@ -15,17 +15,15 @@ import { AuthenticationService } from './../../shared/services/authentication.se
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  msg;
   currentUser: any;
+  msg;
 
   constructor(
     private authentication: AuthenticationService, 
     public dialog: MdDialog,
     public snackBar: MdSnackBar,
     private router: Router
-  ) {
-    
-  }
+  ) { }
 
   ngOnInit() { }
 

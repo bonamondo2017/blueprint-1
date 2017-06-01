@@ -1,4 +1,4 @@
-export const configBonamondo = {
+export const authConfig = {
 	apiKey: "AIzaSyCBuu09R6VTRxQuh4woMkeLK_cbR6HnRnc",
 	authDomain: "bonamondo-72513.firebaseapp.com",
 	databaseURL: "https://bonamondo-72513.firebaseio.com",
@@ -6,7 +6,7 @@ export const configBonamondo = {
 	messagingSenderId: "773377265934"
 };
 
-export var configBlueprint = {
+export var databaseConfig = {
 	apiKey: "AIzaSyBc1h3JHw_yvH8c9LJdZr6YtO6NUgffILw",
 	authDomain: "blueprint-1e7a3.firebaseapp.com",
 	databaseURL: "https://blueprint-1e7a3.firebaseio.com",

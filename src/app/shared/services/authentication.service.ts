@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { auth, database} from 'firebase';
+import { auth, database } from 'firebase';
+
+/*Firebase*/
+import { authConfig, databaseConfig } from './../../../environments/firebase.config';
+import { initializeApp } from 'firebase';
 
 import { Observable } from 'rxjs/Observable';
 
@@ -9,14 +13,17 @@ export class AuthenticationService {
   originalUsername: string;
   
   login = (email, password) => new Promise((resolve, reject) => {
-    auth().signInWithEmailAndPassword(email, password)
+    let fbAuth = initializeApp(authConfig);
+    let fbDatabase = initializeApp(databaseConfig);
+
+    fbAuth.auth().signInWithEmailAndPassword(email, password)
     .then(res => {
-      if(auth().currentUser.emailVerified) {
-        let email = auth().currentUser.email;
-        let uid = auth().currentUser.uid;
+      if(fbAuth.auth().currentUser.emailVerified) {
+        let email = fbAuth.auth().currentUser.email;
+        let uid = fbAuth.auth().currentUser.uid;
 
         let that = this;
-        database().ref('/users/' + uid)
+        fbDatabase.database().ref('/users/' + uid)
         .once('value')
         .then(function(snapshot) {
           that.name = snapshot.val().username;
@@ -42,7 +49,9 @@ export class AuthenticationService {
   })
 
   logout = () => new Promise((resolve, reject) => {
-    auth().signOut()
+    let fbAuth = initializeApp(authConfig);
+
+    fbAuth.auth().signOut()
     .then(res => {
       resolve({
         cod: "lo-01",
@@ -58,6 +67,9 @@ export class AuthenticationService {
   })
 
   signup = (email, repeatEmail, password, firstUsername) => new Promise((resolve, reject) => {
+    let fbAuth = initializeApp(authConfig);
+    let fbDatabase = initializeApp(databaseConfig);
+
     let username;
     let emailToUsername;
     let newUsername;
@@ -65,7 +77,7 @@ export class AuthenticationService {
     
     if(email === repeatEmail) {
       //Checking if signing up email is already registered
-      database().ref('/users')
+      fbDatabase.database().ref('/users')
       .orderByChild('email')
       .equalTo(email)
       .once('value')
@@ -84,7 +96,7 @@ export class AuthenticationService {
           console.log(username);
           
           //Checking if signing up usernam exists
-          database().ref('/users')
+          fbDatabase.database().ref('/users')
           .orderByChild('username')
           .equalTo(username)
           .once('value')
@@ -93,11 +105,11 @@ export class AuthenticationService {
               this.originalUsername = username;
               this.signupCheckingUsername(email, password, username, 0);
             } else {
-              auth().createUserWithEmailAndPassword(email, password)
+              fbAuth.auth().createUserWithEmailAndPassword(email, password)
               .then(res => {
-                let uid = auth().currentUser.uid;
+                let uid = fbAuth.auth().currentUser.uid;
 
-                database().ref('users').child(uid).set({
+                fbDatabase.database().ref('users').child(uid).set({
                   email: email,
                   username: username
                 })
@@ -123,10 +135,12 @@ export class AuthenticationService {
   })
 
   recoverPasswordEmail = (email) => new Promise((resolve, reject) => {
-    auth().fetchProvidersForEmail(email)
+    let fbAuth = initializeApp(authConfig);
+    
+    fbAuth.auth().fetchProvidersForEmail(email)
     .then(res => {
       if(res.length > 0) {
-        auth().sendPasswordResetEmail(email);
+        fbAuth.auth().sendPasswordResetEmail(email);
 
         resolve({
           cod: "rpe-01",
@@ -142,10 +156,13 @@ export class AuthenticationService {
   })
   
   signupCheckingUsername = (email, password, username, number) => new Promise((resolve, reject) => {
+    let fbAuth = initializeApp(authConfig);
+    let fbDatabase = initializeApp(databaseConfig);
+
     let newUsername;
     let newNumber;
     
-    database().ref('/users')
+    fbDatabase.database().ref('/users')
     .orderByChild('username')
     .equalTo(username)
     .once('value')

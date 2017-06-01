@@ -3,6 +3,10 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { Observable } from 'rxjs/Observable';
 import { auth, database} from 'firebase';
 
+/*Firebase*/
+import { authConfig } from './../../../environments/firebase.config';
+import { initializeApp } from 'firebase';
+
 /*Services*/
 import { AuthenticationService } from './../services/authentication.service';
 
@@ -18,7 +22,10 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    auth().onAuthStateChanged((user) => {
+    var fbAuth = initializeApp(authConfig);
+
+    fbAuth.auth().onAuthStateChanged((user) => {
+      console.log(user);
       if(!user) {
         this.router.navigate(['/login']);
       }
