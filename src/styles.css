@@ -15,6 +15,7 @@ a [href]:hover {
 body {
   height: 100%;
   font-family: 'Roboto', sans-serif;
+  background: #fff;
 }
 
 h1 {
@@ -36,6 +37,30 @@ md-error {
 
 .float-right {
   float: right;
+}
+
+.icon-form-input {
+  color: #000;
+  float: left;
+  font-size: 25px;
+  margin-right: 5px;
+  padding-top: 10px;
+}
+
+.icon-form-datepicker {
+  color: #000;
+  float: left;
+  font-size: 25px;
+  margin-right: 5px;
+  padding-top: 15px;
+}
+
+.icon-form-select {
+  color: #000;
+  float: left;
+  font-size: 25px;
+  margin-right: 5px;
+  padding-top: 0;
 }
 
 .list-box md-icon {
