@@ -4,15 +4,13 @@ import { MdDialog, MdDialogClose } from '@angular/material';
 
 /*Components*/
 import { DeleteConfirmComponent } from './../../../../shared/components/delete-confirm/delete-confirm.component';
+import { FormMultipleAutocompleteComponent } from './../../../../shared/components/form-multiple-autocomplete/form-multiple-autocomplete.component';
 
 /*Models*/
 import { SomethingsChild } from './../../../../shared/models/somethings-child';
 
 /*Services*/
 import { CrudService } from './../../../../shared/services/crud.service';
-
-/*Third party*/
-import { database } from 'firebase';
 
 /* Validators */
 import { MyValidators } from './../../../../shared/validators/my-validators';
@@ -36,11 +34,19 @@ export class FormComponent implements OnInit {
   searchList = false;
   searchAnswers;
 
+  /* formMultipleAutocompleteComponent Input start */
+  class;
+  /* formMultipleAutocompleteComponent Input finish */
+
   constructor(
     private crud: CrudService, 
     public dialog: MdDialog,
     private myValidators: MyValidators
   ) {
+    /* formMultipleAutocompleteComponent Input start */
+    this.class = "w100p";
+    /* formMultipleAutocompleteComponent Input end */
+
     this.somethingChildForm = new FormGroup({
       'field_0_simpleInput': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'field_0_simpleSelect': new FormControl('', Validators.required),

@@ -7,15 +7,21 @@
   
   <form id="form" (ngSubmit)="login(email.value, password.value)">
     <div>
-      <md-icon class="icon-form-input">person_outline</md-icon>
       <md-input-container>
+        <span md-prefix>
+          <md-icon>person_outline</md-icon>
+        </span>
+        
         <input type="text" mdInput placeholder="E-mail" #email autocomplete="off">
       </md-input-container>
     </div>
 
     <div>
-      <md-icon class="icon-form-input">vpn_key</md-icon>
-      <md-input-container>        
+      <md-input-container>
+        <span md-prefix>
+          <md-icon>vpn_key</md-icon>
+        </span>
+        
         <input type="password" mdInput placeholder="Password" #password autocomplete="off">
       </md-input-container>
     </div>
@@ -29,7 +35,7 @@
     </div>
     
     <div id="forgot-password">
-      <a>Forgot your password?</a>
+      <a (click)="forgotPassword()">Forgot your password?</a>
     </div>
   </form>
   

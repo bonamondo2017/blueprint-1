@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 /*Components*/
 import { AppComponent } from './app.component';
 import { LoginComponent } from './components/login/login.component';
+import { SignupComponent } from './components/signup/signup.component';
 
 /*Guards*/
 import { AuthGuard } from './shared/guards/auth.guard';
@@ -15,7 +16,6 @@ import { AuthGuard } from './shared/guards/auth.guard';
 /*Modules*/
 import { RoutingModule } from './modules/routing/routing.module';
 import { SharedModule } from './shared/modules/shared/shared.module';
-import { SignupComponent } from './components/signup/signup.component';
 
 @NgModule({
   declarations: [

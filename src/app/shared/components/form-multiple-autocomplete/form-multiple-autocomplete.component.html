@@ -1,0 +1,17 @@
+<div *ngIf="error.length < 1">
+  <md-input-container class="{{class}}">
+    <input [mdAutocomplete]="auto" mdInput placeholder="Multiple Choices Autocomplete" type="text">
+  </md-input-container>
+
+  <md-autocomplete #auto="mdAutocomplete">
+    <md-option *ngFor="let element of array" [value]="option">
+      {{ fieldsToShow }}
+    </md-option>
+  </md-autocomplete>
+</div>
+
+<div *ngIf="error.length > 0">
+  <md-error>
+    Checar requisitos para o components form-multiple-autocomplete ({{ error }})
+  </md-error>
+</div>

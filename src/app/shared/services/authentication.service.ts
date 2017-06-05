@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
-import { auth, database} from 'firebase';
 
-import 'rxjs/add/operator/map';
+/*Firebase*/
+import { fbAuth } from './../../../environments/firebase-auth.config';
+import { fbDatabase } from './../../../environments/firebase-database.config';
+
+import { Observable } from 'rxjs/Observable';
 
 @Injectable()
 export class AuthenticationService {
@@ -9,22 +12,20 @@ export class AuthenticationService {
   originalUsername: string;
   
   login = (email, password) => new Promise((resolve, reject) => {
-    auth().signInWithEmailAndPassword(email, password)
+    
+    fbAuth.signInWithEmailAndPassword(email, password)
     .then(res => {
-      if(auth().currentUser.emailVerified) {
-        let email = auth().currentUser.email;
-        let uid = auth().currentUser.uid;
+      if(fbAuth.currentUser.emailVerified) {
+        let email = fbAuth.currentUser.email;
+        let uid = fbAuth.currentUser.uid;
 
         let that = this;
-        database().ref('/users/' + uid)
+        fbDatabase.ref('/users/' + uid)
         .once('value')
         .then(function(snapshot) {
           that.name = snapshot.val().username;
-          sessionStorage.setItem('name', that.name);
         });
-
-        sessionStorage.setItem('email', email);
-
+        
         resolve({
           cod: "l-01",
           message: "Login successful"
@@ -45,10 +46,8 @@ export class AuthenticationService {
   })
 
   logout = () => new Promise((resolve, reject) => {
-    auth().signOut()
+    fbAuth.signOut()
     .then(res => {
-      sessionStorage.clear();
-
       resolve({
         cod: "lo-01",
         message: res
@@ -70,7 +69,7 @@ export class AuthenticationService {
     
     if(email === repeatEmail) {
       //Checking if signing up email is already registered
-      database().ref('/users')
+      fbDatabase.ref('/users')
       .orderByChild('email')
       .equalTo(email)
       .once('value')
@@ -89,7 +88,7 @@ export class AuthenticationService {
           console.log(username);
           
           //Checking if signing up usernam exists
-          database().ref('/users')
+          fbDatabase.ref('/users')
           .orderByChild('username')
           .equalTo(username)
           .once('value')
@@ -98,11 +97,11 @@ export class AuthenticationService {
               this.originalUsername = username;
               this.signupCheckingUsername(email, password, username, 0);
             } else {
-              auth().createUserWithEmailAndPassword(email, password)
+              fbAuth.createUserWithEmailAndPassword(email, password)
               .then(res => {
-                let uid = auth().currentUser.uid;
+                let uid = fbAuth.currentUser.uid;
 
-                database().ref('users').child(uid).set({
+                fbDatabase.ref('users').child(uid).set({
                   email: email,
                   username: username
                 })
@@ -126,12 +125,31 @@ export class AuthenticationService {
       resolve("Email was not repeated correctly");
     }
   })
+
+  recoverPasswordEmail = (email) => new Promise((resolve, reject) => {
+    fbAuth.fetchProvidersForEmail(email)
+    .then(res => {
+      if(res.length > 0) {
+        fbAuth.sendPasswordResetEmail(email);
+
+        resolve({
+          cod: "rpe-01",
+          message: "E-mail enviado. Cheque e finalize o processo."
+        })
+      } else {
+        resolve({
+          cod: "rpe-02",
+          message: "E-mail não cadastrado."
+        })
+      }
+    });
+  })
   
   signupCheckingUsername = (email, password, username, number) => new Promise((resolve, reject) => {
     let newUsername;
     let newNumber;
     
-    database().ref('/users')
+    fbDatabase.ref('/users')
     .orderByChild('username')
     .equalTo(username)
     .once('value')

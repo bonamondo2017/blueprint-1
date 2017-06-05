@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { database } from 'firebase';
+
+/*Firebase*/
+import { fbDatabase } from './../../../environments/firebase-database.config';
 
 @Injectable()
 export class CrudService {
@@ -40,7 +42,7 @@ export class CrudService {
       countChildIteration = 0;
       //obj = {}; //VOLTAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
       objectFromSpecificKey = {};
-      ref = database().ref(child[i]); // Referencia a child onde será inserido o registro
+      ref = fbDatabase.ref(child[i]); // Referencia a child onde será inserido o registro
       setKey = true; // Variável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
 
       for (let k in objectToPush){ // Loop que varre todos os campos do formulário
@@ -67,7 +69,7 @@ export class CrudService {
                     keyToUpdate = key;
                   }
                 } else {
-                  ref2 = database().ref(child[i]+"/"+keyToUpdate);
+                  ref2 = fbDatabase.ref(child[i]+"/"+keyToUpdate);
                   ref2.update(obj);
                 }
                 /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
@@ -81,7 +83,7 @@ export class CrudService {
                 else
                   arr = objectToPush[k].split(";");
                 for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém criada
-                  ref2 = database().ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
+                  ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
                   objectFromSpecificKey[arr[j].__key] = arr[j]; // Inseri na variável objectFromSpecificKey todos os elementos com valor true
                   ref2.update(objectFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
                 }
@@ -103,7 +105,7 @@ export class CrudService {
                 /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
                 if(countChildIteration < 1) {
                   if(setKey) { // Verifica se é a chave principal ou a sub-child
-                    ref2 = database().ref(child[i]+"/"+lastSubchild);
+                    ref2 = fbDatabase.ref(child[i]+"/"+lastSubchild);
                     let key = ref2.push(obj).key; // Cria a chave principal
                     
                     lastKey = {
@@ -117,7 +119,7 @@ export class CrudService {
                     keyToUpdate = key;
                   }
                 } else {
-                  ref2 = database().ref(child[i]+"/"+keyToUpdate).child(lastSubchild);
+                  ref2 = fbDatabase.ref(child[i]+"/"+keyToUpdate).child(lastSubchild);
                   ref2.update(obj);
                 }
                 /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
@@ -200,7 +202,7 @@ export class CrudService {
 
     child = params.child;
 
-    ref = database().ref(child);
+    ref = fbDatabase.ref(child);
     
     if(orderByChild) {
       ref
@@ -286,7 +288,7 @@ export class CrudService {
     
     child = params.child;
 
-    ref = database().ref(child);
+    ref = fbDatabase.ref(child);
 
     if(orderByChild) {
       ref
@@ -350,7 +352,7 @@ export class CrudService {
 
     for(let i = 0; i < child.length; i++) { //child to create in
       if(idChildToUpdate[i]) {
-        ref = database().ref(child[i]).child(idChildToUpdate[i]); // Referencia a child com o registro que será atualizado
+        ref = fbDatabase.ref(child[i]).child(idChildToUpdate[i]); // Referencia a child com o registro que será atualizado
       } 
       
       check = null;
@@ -375,10 +377,10 @@ export class CrudService {
                   arr = objectToUpdate[k]; // Cria um array com todos os elementos que serão inseridos dentro da child recém criada
                 else
                   arr = objectToUpdate[k].split(";");
-                database().ref(lastKey.child+"/"+lastKey.key).child(child[i]).remove(); // Apaga todos os registros na sub-child antes de povoá-los com os dados atualizados
+                fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]).remove(); // Apaga todos os registros na sub-child antes de povoá-los com os dados atualizados
 
                 for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém atualizada
-                  ref2 = database().ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
+                  ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
                   updateFromSpecificKey[arr[j]] = 1; // Inseri na variável updateFromSpecificKey todos os elementos com valor true
                   ref2.set(updateFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
                 }
@@ -399,14 +401,14 @@ export class CrudService {
               /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
               if(countChildIteration < 1) {
                 if(setKey) { // Verifica se é a chave principal ou a sub-child
-                  ref2 = database().ref(child[i]+"/"+lastSubchild);
+                  ref2 = fbDatabase.ref(child[i]+"/"+lastSubchild);
                   let key = ref2.push(obj).key; // Cria a chave principal
                   
                 } else {
                   let key = ref.push(obj).key;
                 }
               } else {
-                ref2 = database().ref(child[i]+"/"+idChildToUpdate[i]).child(lastSubchild);
+                ref2 = fbDatabase.ref(child[i]+"/"+idChildToUpdate[i]).child(lastSubchild);
                 ref2.update(obj);
               }
               /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
@@ -450,13 +452,13 @@ export class CrudService {
     }
     
     for(let i = 0; i < child.length; i++) { //child to delete in
-      ref = database().ref(child[i]);
+      ref = fbDatabase.ref(child[i]);
       if(childRelated) { // Verifica se existem child que se relacionam com a child a ser excluída
         for(let j = 0; j < childRelated.length; j++) { // loop que varre todas as childs que se relacionam com a child a ser excluída
           check = childRelated[j].split('_'); // Ex.: Tranforma a child "0_productsClass" em ['0','productsClass']
           
           if(check[1] == i) { // Verifica se a child relacionada refere-se a child a ser excluída
-            ref2 = database().ref(check[2]); // referencia a child que child a ser excluída está relacionada
+            ref2 = fbDatabase.ref(check[2]); // referencia a child que child a ser excluída está relacionada
             ref2.orderByKey().once("value").then(res => { // loop que varre todas childs em busca da child a ser excluída
               res.forEach(childRes => { 
                 let childIntoChild = childRes.hasChild(child[i] + "/" + idChildToDelete); // true = child tem relação || false = child não tem relação

@@ -12,8 +12,11 @@
   <div id="form-box">
     <form [formGroup]="signupForm" (ngSubmit)="onSubmit()" >
       <md-card>
-        <md-icon class="icon-form-input">person_outline</md-icon>
-        <md-input-container class="w90p">
+        <md-input-container class="w100p">
+          <span md-prefix>
+            <md-icon>person_outline</md-icon>
+          </span>
+
           <input type="text" formControlName="field_1_name" mdInput placeholder="Name" autocomplete="off">
         </md-input-container>
 
@@ -27,8 +30,11 @@
       </md-card>
 
       <md-card>
-        <md-icon class="icon-form-input">mail_outline</md-icon>
-        <md-input-container class="w90p">
+        <md-input-container class="w100p">
+          <span md-prefix>
+            <md-icon>mail_outline</md-icon>
+          </span>
+
           <input type="text" formControlName="field_0_email" mdInput placeholder="Email" autocomplete="off">
         </md-input-container>
 
@@ -43,9 +49,12 @@
       </md-card>
 
       <md-card>
-        <md-icon class="icon-form-input">lock_open</md-icon>
-        <md-input-container class="w90p">
-          <input type="password" formControlName="field_0_password" mdInput placeholder="Password" autocomplete="off">
+        <md-input-container class="w100p">
+          <span md-prefix>
+            <md-icon>lock_open</md-icon>
+          </span>
+
+          <input type="text" formControlName="field_0_password" mdInput placeholder="Password" autocomplete="off">
         </md-input-container>
 
         <md-error *ngIf="signupForm.controls.field_0_password.hasError('required') && signupForm.controls.field_0_password.touched">
@@ -58,34 +67,7 @@
       </md-card>
 
       <md-card>
-        <md-icon class="icon-form-input">lock_open</md-icon>
-        <md-input-container class="w90p">
-          <input type="password" formControlName="field_0_repeatPassword" mdInput placeholder="Re-Password">
-        </md-input-container>
-
-        <md-error *ngIf="signupForm.controls.field_0_repeatPassword.hasError('required') && signupForm.controls.field_0_repeatPassword.touched">
-          Campo obrigatório
-        </md-error>
-
-        <md-error *ngIf="!signupForm.controls.field_0_repeatPassword.hasError('required') && (signupForm.controls.field_0_repeatPassword.value != signupForm.controls.field_0_password.value) && signupForm.controls.field_0_repeatPassword.touched">
-          Repetição incorreta
-        </md-error>
-      </md-card>
-
-      <md-card>
-        <md-icon class="icon-form-input">date_range</md-icon>
-        <md-input-container class="w90p">
-          <input type="date" formControlName="field_0_birthdate" mdInput placeholder="Data de nascimento">
-        </md-input-container>
-      </md-card>
-
-      <md-card>
-        <md-icon class="icon-form-select">wc</md-icon>
-        <md-select placeholder="Gender" formControlName="field_0_gender">
-            <md-option *ngFor="let gender of genders" [value]="gender">
-              {{gender}}  
-            </md-option>
-        </md-select>
+        Item 4
       </md-card>
     </form>
   </div>

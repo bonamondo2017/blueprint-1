@@ -17,16 +17,9 @@ export class SignupComponent implements OnInit {
     this.signupForm = new FormGroup({
       'field_1_name': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'field_0_email': new FormControl('', [Validators.required, this.myValidators.email]),
-      'field_0_password': new FormControl('', [Validators.required, Validators.minLength(8)]),
-      'field_0_repeatPassword': new FormControl('', [Validators.required]),
-      'field_0_birthdate': new FormControl('', [Validators.required]),
-      'field_0_gender': new FormControl('')
+      'field_0_password': new FormControl('', [Validators.required, Validators.minLength(8)])
     });
   }
-
-  genders = ["Agênero", "Feminino", "Gênero-fofo", "Masculino", "Transfeminine", "Transmasculine"]
-
-
 
   ngOnInit() {
   }

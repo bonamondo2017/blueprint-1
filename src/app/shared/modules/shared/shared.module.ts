@@ -1,10 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '@angular/material';
 import { Routes, RouterModule } from '@angular/router';
 
 /*Components*/
 import { DeleteConfirmComponent } from './../../components/delete-confirm/delete-confirm.component';
+import { ForgotPasswordComponent } from './../../components/forgot-password/forgot-password.component';
+import { FormMultipleAutocompleteComponent } from './../../components/form-multiple-autocomplete/form-multiple-autocomplete.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
 
 /*Directives*/
@@ -26,12 +29,16 @@ import { TextMaskModule } from 'angular2-text-mask';
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MaterialModule,
     RouterModule,
     TextMaskModule
   ],
   declarations: [
     DeleteConfirmComponent,
+    ForgotPasswordComponent,
+    FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
     PageNotFoundComponent,
     SearchByNamePipe
@@ -39,6 +46,8 @@ import { TextMaskModule } from 'angular2-text-mask';
   exports: [
     MaterialModule,
     DeleteConfirmComponent,
+    ForgotPasswordComponent,
+    FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
     PageNotFoundComponent,
     SearchByNamePipe
@@ -49,7 +58,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     MyValidators
   ],
   entryComponents: [
-    DeleteConfirmComponent
+    DeleteConfirmComponent,
+    ForgotPasswordComponent
   ]
 })
 export class SharedModule { }

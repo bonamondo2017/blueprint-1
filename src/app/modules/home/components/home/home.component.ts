@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 
+/*Services*/
 import { AuthenticationService } from './../../../../shared/services/authentication.service';
-import { CrudService } from './../../../../shared/services/crud.service';
-import { initializeApp } from 'firebase';
-import { firebaseConfig } from './../../../../../environments/firebase.config';
 
 @Component({
   selector: 'app-home',
@@ -13,22 +11,15 @@ import { firebaseConfig } from './../../../../../environments/firebase.config';
 })
 
 export class HomeComponent implements OnInit {
-  msg: any;
+  currentUser: any;
 
-  constructor(private authentication: AuthenticationService, private router: Router) { }
+  constructor(private router: Router, private authentication: AuthenticationService) { }
 
   ngOnInit() {
   }
 
   logout = () => {
-    this.authentication.logout()
-    .then(res => {
-      this.msg = res;
-
-      if(this.msg.cod == "lo-01") {
-        this.router.navigate(['/login']);
-      }
-    })
-    .catch(rej => this.msg = [rej]);;
+    this.authentication.logout();
+    this.router.navigate(['/login']);
   }
 }
