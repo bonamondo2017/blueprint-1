@@ -5,7 +5,9 @@
 
   <md-autocomplete #auto="mdAutocomplete">
     <md-option *ngFor="let element of array" [value]="option">
-      {{ fieldsToShow }}
+      <span *ngFor="let objArrayElement of generateArray(element)" >
+        {{ objArrayElement }}
+      </span>
     </md-option>
   </md-autocomplete>
 </div>

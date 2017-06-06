@@ -1,0 +1,29 @@
+md-card {
+    margin: 0;
+    padding: 0;
+}
+
+#toolbar-action {
+    font-size: 20px;
+    font-weight: bolder;
+    right: 0;
+    margin: 0;
+    text-align: right;
+    width: 50%;
+}
+
+#toolbar-spacer {
+    font-size: 20px;
+    font-weight: bolder;
+    left: 0;
+    margin: 0;
+    width: 25%;
+}
+
+#toolbar-title {
+    font-size: 20px;
+    font-weight: bolder;
+    left: 0;
+    margin: 0;
+    width: 25%;
+}

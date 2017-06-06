@@ -31,8 +31,10 @@
       </md-list-item>
 
       <md-list-item>
-        <md-icon class="sidenav-item-icon">view_list</md-icon> 
-        <span class="sidenav-item">List example</span>
+        <a routerLink="/home/list" (click)="sidenav.close()">
+          <md-icon class="sidenav-item-icon">view_list</md-icon> 
+          <span class="sidenav-item">List example</span>
+        </a>
       </md-list-item>
     </md-nav-list>
   </md-sidenav>

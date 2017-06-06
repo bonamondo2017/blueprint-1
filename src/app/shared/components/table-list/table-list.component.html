@@ -1,0 +1,31 @@
+<div *ngIf="error.length < 1">
+  <md-card>
+    <md-toolbar>
+      <div id="toolbar-title">{{toolbar.title}}</div> 
+      <div id="toolbar-spacer"></div>
+      <div id="toolbar-action">
+        <md-icon *ngIf="toolbar.delete">delete</md-icon>
+        <md-icon *ngIf="toolbar.search">search</md-icon>
+        <md-icon *ngIf="toolbar.more">more_vert</md-icon>
+      </div>
+    </md-toolbar>
+
+    <md-list>
+      <md-list-item>
+
+      </md-list-item>
+
+      <md-divider></md-divider>
+
+      <md-list-item>
+        
+      </md-list-item>
+    </md-list>
+  </md-card>
+</div>
+
+<div *ngIf="error.length > 0">
+  <md-error>
+    Checar requisitos para o components table-list ({{ error }})
+  </md-error>
+</div>

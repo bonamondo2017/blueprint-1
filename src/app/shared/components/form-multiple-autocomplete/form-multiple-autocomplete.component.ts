@@ -14,12 +14,11 @@ export class FormMultipleAutocompleteComponent implements OnInit {
 
   array: any = [];
   error: any = [];
-  fieldsToShow: any;
 
   constructor(
     private crud: CrudService
   ) {
-
+    
   }
 
   ngOnInit() {
@@ -27,26 +26,17 @@ export class FormMultipleAutocompleteComponent implements OnInit {
       switch(this.arraySource.source) {
         case 'firebase':
           if(this.arraySource.child) {
-            if(this.arraySource.fieldsToShow) {
-              this.crud.readArray({ child: this.arraySource.child })
+            if(this.arraySource.keys) {
+              this.crud.readArray({ 
+                child: this.arraySource.child,
+                keys: this.arraySource.keys
+              })
               .then(res => {
                 this.array = res;
-                let test = document.createElement('div');
-                test.setAttribute('class', 'test');
-                
-                for(let i = 0; i < this.arraySource.fieldsToShow.length; i++) {
-                  test.innerHTML += "	&#123;&#123;element."+this.arraySource.fieldsToShow[i]+"&#125;&#125;"
-                  
-                  if(i < (this.arraySource.fieldsToShow.length - 1)) {
-                    test.innerHTML += " - ";
-                  }
-                }
-                console.log(test.innerText);
-                this.fieldsToShow = test.innerText;
               });           
             
             } else {
-              this.error = ['arraySource.fieldsToShow']  
+              this.error = ['arraySource.keys']  
             }
           } else {
             this.error = ['arraySource.child']
@@ -62,5 +52,16 @@ export class FormMultipleAutocompleteComponent implements OnInit {
     } else {
       this.error = ['arraySource']
     }
+  }
+
+  generateArray = (obj) => {
+    return Object.keys(obj)
+    /*.map((key)=>{
+      for(let i = 0; i < this.arraySource.keys.length; i++) {
+        if(key == this.arraySource.keys[i]) {
+          return obj[key]
+        }
+      }
+    });*/
   }
 }

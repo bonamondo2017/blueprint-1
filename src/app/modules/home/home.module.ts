@@ -13,6 +13,7 @@ import { HomeComponent } from './components/home/home.component';
 import { RoutingModule } from './modules/routing/routing.module';
 import { SharedModule } from './../../shared/modules/shared/shared.module';
 import { InvitationComponent } from './components/invitation/invitation.component';
+import { ListComponent } from './components/list/list.component';
 
 @NgModule({
   imports: [
@@ -28,7 +29,8 @@ import { InvitationComponent } from './components/invitation/invitation.componen
     FormComponent,
     ProfileComponent,
     HomeComponent,
-    InvitationComponent
+    InvitationComponent,
+    ListComponent
   ]
 })
 

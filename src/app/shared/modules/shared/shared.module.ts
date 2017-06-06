@@ -9,6 +9,7 @@ import { DeleteConfirmComponent } from './../../components/delete-confirm/delete
 import { ForgotPasswordComponent } from './../../components/forgot-password/forgot-password.component';
 import { FormMultipleAutocompleteComponent } from './../../components/form-multiple-autocomplete/form-multiple-autocomplete.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
+import { TableListComponent } from './../../components/table-list/table-list.component';
 
 /*Directives*/
 import { FormMultipleselectAutocompleteDirective } from './../../directives/form-multipleselect-autocomplete.directive';
@@ -41,7 +42,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
     PageNotFoundComponent,
-    SearchByNamePipe
+    SearchByNamePipe,
+    TableListComponent
   ],
   exports: [
     MaterialModule,
@@ -50,7 +52,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
     PageNotFoundComponent,
-    SearchByNamePipe
+    SearchByNamePipe,
+    TableListComponent
   ],
   providers: [
     AuthenticationService,

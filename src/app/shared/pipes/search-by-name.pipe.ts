@@ -4,7 +4,6 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'searchByName'
 })
 export class SearchByNamePipe implements PipeTransform {
-
   transform(items: any, args?: any): any {
     let fieldAndValue = args.split('_');
     let arr= [];
@@ -24,5 +23,4 @@ export class SearchByNamePipe implements PipeTransform {
     
     return arr.splice(0, 5);
   }
-
 }
