@@ -56,12 +56,8 @@ export class FormMultipleAutocompleteComponent implements OnInit {
 
   generateArray = (obj) => {
     return Object.keys(obj)
-    /*.map((key)=>{
-      for(let i = 0; i < this.arraySource.keys.length; i++) {
-        if(key == this.arraySource.keys[i]) {
-          return obj[key]
-        }
-      }
-    });*/
+    .map((key)=>{
+      return obj[key];
+    });
   }
 }

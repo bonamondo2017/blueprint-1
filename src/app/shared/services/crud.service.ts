@@ -172,7 +172,7 @@ export class CrudService {
     let ref;
     let key;
     let obj;
-    let objFiltered;
+    let objFiltered = [];
     let res;
 
     if(!params) {
@@ -219,7 +219,28 @@ export class CrudService {
             obj[i].__key = key[i];
           }
 
-          resolve(obj);
+          if(params.keys) {
+            for(let i= 0; i < obj.length; i++) {
+              let temp = {};
+              
+              Object.keys(obj[i])
+              .map(k => {
+                for(let j = 0; j < params.keys.length; j++) {
+                  if(k == params.keys[j]) {
+                    temp[k] = obj[i][k];
+                    //objFiltered = ['linha 244 do crud'];
+                    //Já trago os campos que desejo em k e seus valores em obj[i][k]]. Como atribuir isso ao objFiltered?
+                    //objFiltered = [[i][k = obj[i][k]]];
+                  }
+                }
+              })
+              objFiltered.push(temp);
+            }
+            
+            resolve(objFiltered);
+          } else {
+            resolve(obj);
+          }
         }
       })
     } else {
@@ -237,18 +258,22 @@ export class CrudService {
           
           if(params.keys) {
             for(let i= 0; i < obj.length; i++) {
+              let temp = {};
+              
               Object.keys(obj[i])
               .map(k => {
                 for(let j = 0; j < params.keys.length; j++) {
                   if(k == params.keys[j]) {
-                    objFiltered = ['linha 244 do crud'];
+                    temp[k] = obj[i][k];
+                    //objFiltered = ['linha 244 do crud'];
                     //Já trago os campos que desejo em k e seus valores em obj[i][k]]. Como atribuir isso ao objFiltered?
                     //objFiltered = [[i][k = obj[i][k]]];
                   }
                 }
               })
+              objFiltered.push(temp);
             }
-            console.log(objFiltered);
+            
             resolve(objFiltered);
           } else {
             resolve(obj);
