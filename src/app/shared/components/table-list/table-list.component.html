@@ -9,18 +9,37 @@
         <md-icon *ngIf="toolbar.more">more_vert</md-icon>
       </div>
     </md-toolbar>
+    
+    <md-progress-bar mode="indeterminate" *ngIf="isLoadingList"></md-progress-bar>
 
-    <md-list>
-      <md-list-item>
+    <table *ngIf="!isLoadingList">
+      <tr>
+        <th id="list-item-checkbox" *ngIf="toolbar.delete">
+          <md-checkbox></md-checkbox>
+        </th>
 
-      </md-list-item>
+        <th *ngFor="let header of arrayHeader">
+          {{ header }}
+        </th>
 
-      <md-divider></md-divider>
+        <th class="list-item-actions" *ngIf="list.edit || list.delete">
+        </th>
+      </tr>
 
-      <md-list-item>
-        
-      </md-list-item>
-    </md-list>
+      <tr class="list-item" *ngFor="let data of arraySourceFinal">
+        <td *ngIf="toolbar.delete">
+          <md-checkbox></md-checkbox>
+        </td>
+
+        <td *ngFor="let item of data">
+          {{ item }}
+        </td>
+
+        <td class="list-item-actions" *ngIf="list.edit">
+          <md-icon *ngIf="list.edit">edit</md-icon>
+        </td>
+      </tr>
+    </table>
   </md-card>
 </div>
 

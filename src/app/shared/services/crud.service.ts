@@ -222,18 +222,19 @@ export class CrudService {
           if(params.keys) {
             for(let i= 0; i < obj.length; i++) {
               let temp = {};
-              
-              Object.keys(obj[i])
+
+              for(let j = 0; j < params.keys.length; j++) {
+                temp[params.keys[j]] = obj[i][params.keys[j]];
+              }
+
+              /*Object.keys(obj[i])
               .map(k => {
                 for(let j = 0; j < params.keys.length; j++) {
                   if(k == params.keys[j]) {
                     temp[k] = obj[i][k];
-                    //objFiltered = ['linha 244 do crud'];
-                    //Já trago os campos que desejo em k e seus valores em obj[i][k]]. Como atribuir isso ao objFiltered?
-                    //objFiltered = [[i][k = obj[i][k]]];
                   }
                 }
-              })
+              })*/
               objFiltered.push(temp);
             }
             
@@ -259,18 +260,19 @@ export class CrudService {
           if(params.keys) {
             for(let i= 0; i < obj.length; i++) {
               let temp = {};
-              
-              Object.keys(obj[i])
+
+              for(let j = 0; j < params.keys.length; j++) {
+                temp[params.keys[j]] = obj[i][params.keys[j]];
+              }
+
+              /*Object.keys(obj[i])
               .map(k => {
                 for(let j = 0; j < params.keys.length; j++) {
                   if(k == params.keys[j]) {
                     temp[k] = obj[i][k];
-                    //objFiltered = ['linha 244 do crud'];
-                    //Já trago os campos que desejo em k e seus valores em obj[i][k]]. Como atribuir isso ao objFiltered?
-                    //objFiltered = [[i][k = obj[i][k]]];
                   }
                 }
-              })
+              })*/
               objFiltered.push(temp);
             }
             

@@ -10,17 +10,12 @@ export class ListComponent implements OnInit {
   public list: any;
 
   constructor() {
-    this.toolbar = {
-      title: "[toolbar.title]",
-      search: true,
-      delete: true,
-      more: true
-    };
-
     this.list = {
       source: 'firebase', 
       child: 'people', 
-      fieldsToShow:['uid', 'name']
+      childKeys:['uid', 'name'],
+      header: ['Id', 'Nome'],
+      edit: true
     };
   }
 
