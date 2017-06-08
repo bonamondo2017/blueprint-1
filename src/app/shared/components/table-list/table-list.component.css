@@ -12,6 +12,10 @@ td {
     padding: 15px;
 }
 
+th md-icon {
+    color: #BDBDBD;
+}
+
 th {
     border: none;
     color: #BDBDBD;
@@ -35,6 +39,22 @@ th {
     text-align: right;
 }
 
+#list-controllers {
+    font-size: 16px;
+    margin-left: 50%;
+    width: 50%;
+}
+
+#list-controllers md-icon {
+    font-size: 16px;
+}
+
+#list-item-checkbox {
+    left: 0;
+    text-align: left;
+    width: 10px;
+}
+
 #toolbar-action {
     font-size: 20px;
     font-weight: bolder;
@@ -42,12 +62,6 @@ th {
     margin: 0;
     text-align: right;
     width: 50%;
-}
-
-#list-item-checkbox {
-    left: 0;
-    text-align: left;
-    width: 10px;
 }
 
 #toolbar-spacer {

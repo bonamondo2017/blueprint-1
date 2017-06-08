@@ -40,6 +40,31 @@
         </td>
       </tr>
     </table>
+
+    <md-toolbar *ngIf="!isLoadingList">
+      <div id="list-controllers">
+        <span>
+          <md-select placeholder="Rows per page" [(ngModel)]="selectedRowValue" name="row">
+            <md-option *ngFor="let row of rows" [value]="row">
+              {{row}}
+            </md-option>
+          </md-select>
+        </span>
+
+        <span>
+          <md-select placeholder="Page" [(ngModel)]="selectedPageValue" name="page">
+            <md-option *ngFor="let page of pages" [value]="page">
+              {{page}}
+            </md-option>
+          </md-select>
+        </span>
+
+        <span>
+          <md-icon>keyboard_arrow_left</md-icon>
+          <md-icon>keyboard_arrow_right</md-icon>
+        </span>
+      </div>
+    </md-toolbar>
   </md-card>
 </div>
 

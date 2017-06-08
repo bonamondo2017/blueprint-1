@@ -8,7 +8,7 @@ import { CrudService } from './../../services/crud.service';
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.css']
 })
-export class TableListComponent implements OnChanges{
+export class TableListComponent implements OnChanges, OnInit{
   @Input() toolbar;
   @Input() list;
 
@@ -16,14 +16,23 @@ export class TableListComponent implements OnChanges{
   arraySource: any = [];
   arraySourceFinal: any = [];
   error: any = [];
-  msg: string;
   isLoadingList: boolean = true;
+  msg: string;
+  rows: any = [];
+  pages: any = [];
+  selectedPageValue: number;
+  selectedRowValue: number;
   
   constructor(
     private crud: CrudService
-  ) { }
-  ngOnChanges(){
-     if(this.list) {
+  ) {
+    this.selectedPageValue = 1;
+    this.selectedRowValue = 1;
+    this.rows = [1, 5, 10, 15, 20, 50, 100, 150, 200];
+  }
+
+  ngOnChanges() {
+    if(this.list) {
       switch(this.list.source) {
         case 'firebase':
           if(this.list.child) {
@@ -48,7 +57,17 @@ export class TableListComponent implements OnChanges{
           }
         break;
 
-        case 'arrayInComponent':
+        case 'array':
+          if(this.list.array) {
+            this.isLoadingList = false;
+            this.arraySource = this.list.array;
+            this.filterArrayKey(this.arraySource);
+            if(this.arraySource.length < 1) {
+              this.msg = "Nada na lista";
+            }
+          } else {
+            this.error = ['list.array']
+          }
         break;
 
         default:
@@ -61,12 +80,24 @@ export class TableListComponent implements OnChanges{
         this.error = ['list.header']  
       }
     } else {
-      this.error = ['list']
+      setTimeout(() => {
+        if(this.list == undefined) {
+          this.error = ['list', 'time exceeded'];
+        }
+      }, 20000)
     }
   }
 
+  ngOnInit() {
+   
+  }
   
-  filterArrayKey(data){
+  filterArrayKey = (data) => {
+    //Set pages array - find a better place for it
+    for(let lim = Math.ceil(data.length / this.selectedRowValue), i = 0; i < lim; i++) {
+      this.pages[i] = i+1;
+    }
+
     let filter = data.map((data) => {
       let temp = [];
       for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
