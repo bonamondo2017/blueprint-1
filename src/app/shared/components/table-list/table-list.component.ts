@@ -15,6 +15,8 @@ export class TableListComponent implements OnChanges, OnInit{
   arrayHeader: any = [];
   arraySource: any = [];
   arraySourceFinal: any = [];
+  checkAllController: boolean = false;
+  checkItem: boolean = false;
   error: any = [];
   isLoadingList: boolean = true;
   msg: string;
@@ -32,6 +34,8 @@ export class TableListComponent implements OnChanges, OnInit{
   }
 
   ngOnChanges() {
+    console.log(this.checkAllController);
+
     if(this.list) {
       switch(this.list.source) {
         case 'firebase':
@@ -89,7 +93,18 @@ export class TableListComponent implements OnChanges, OnInit{
   }
 
   ngOnInit() {
-   
+  }
+
+  checkCheckAllController = () => {
+    this.checkAllController = false;
+    console.log("checkAllController = " + this.checkAllController);
+    console.log("checkItem = " + this.checkItem);
+  }
+
+  checkAllListItens = () => {
+    this.checkItem = !this.checkItem;
+    console.log("checkAllController = " + this.checkAllController);
+    console.log("checkItem = " + this.checkItem);
   }
   
   filterArrayKey = (data) => {
@@ -109,3 +124,19 @@ export class TableListComponent implements OnChanges, OnInit{
     this.arraySourceFinal = filter; 
   }
 }
+
+/***************************************************************************************************************************************
+ * Motivos para a lógica de acesso aos dados para a array da listagem NÃO SER aplicada dentro do componente                            *
+ ***************************************************************************************************************************************/
+/*
+  Universaliza e individualiza a utilização do componente, já que nenhum terceiro elemento está diretamente relacionado a ele
+  O argumento anterior é o que, no fim das contas, define o que componetizar, a independência do elemento
+*/
+
+/***************************************************************************************************************************************
+ * Motivos para a lógica de acesso aos dados para a array da listagem SER aplicada dentro do componente                                *
+ ***************************************************************************************************************************************/
+/*
+  Diminui a complexidade do uso do componente, já que um terceiro elemento, como service necessário para gerar array faz-se desnecessário
+  A não necessidade de acessar um terceiro serviço no componente pai para gerar a array aumenta a produção
+*/

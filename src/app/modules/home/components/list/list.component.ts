@@ -23,7 +23,9 @@ export class ListComponent implements OnInit {
       childKeys:['uid', 'name']  
     }
 
-    /*this.list = {
+    /*
+      //Eliminate crud service and everything envolved
+      this.list = {
       source: 'firebase', 
       child: 'people', 
       childKeys:['uid', 'name'],
