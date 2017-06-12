@@ -16,7 +16,7 @@ export class TableListComponent implements OnChanges, OnInit{
   arraySource: any = [];
   arraySourceFinal: any = [];
   checkAllController: boolean = false;
-  checkItem: boolean = false;
+  checkItem: any = [];
   error: any = [];
   isLoadingList: boolean = true;
   msg: string;
@@ -24,6 +24,7 @@ export class TableListComponent implements OnChanges, OnInit{
   pages: any = [];
   selectedPageValue: number;
   selectedRowValue: number;
+  testingThisShit: any;
   
   constructor(
     private crud: CrudService
@@ -34,8 +35,6 @@ export class TableListComponent implements OnChanges, OnInit{
   }
 
   ngOnChanges() {
-    console.log(this.checkAllController);
-
     if(this.list) {
       switch(this.list.source) {
         case 'firebase':
@@ -66,6 +65,7 @@ export class TableListComponent implements OnChanges, OnInit{
             this.isLoadingList = false;
             this.arraySource = this.list.array;
             this.filterArrayKey(this.arraySource);
+            
             if(this.arraySource.length < 1) {
               this.msg = "Nada na lista";
             }
@@ -92,35 +92,52 @@ export class TableListComponent implements OnChanges, OnInit{
     }
   }
 
-  ngOnInit() {
+  ngOnInit() { 
   }
 
   checkCheckAllController = () => {
     this.checkAllController = false;
-    console.log("checkAllController = " + this.checkAllController);
-    console.log("checkItem = " + this.checkItem);
   }
 
-  checkAllListItens = () => {
-    this.checkItem = !this.checkItem;
-    console.log("checkAllController = " + this.checkAllController);
-    console.log("checkItem = " + this.checkItem);
+  checkAllListItens = (checked) => {
+    if(checked) {
+      this.checkAllController = true;
+      for(let lim = this.arraySourceFinal.length, i = 0; i < lim; i++) {
+        this.arraySourceFinal[i][this.arraySourceFinal.length] = true;
+        console.log(this.arraySourceFinal[i][this.arraySourceFinal.length]);
+      }
+    } else {
+      for(let lim = this.arraySourceFinal.length, i = 0; i < lim; i++) {
+        this.arraySourceFinal[i][this.arraySourceFinal.length] = false;
+        console.log(this.arraySourceFinal[i][this.arraySourceFinal.length]);
+      }
+      /*this.checkAllController = false;
+      this.checkItem = false;*/
+    }
   }
   
   filterArrayKey = (data) => {
-    //Set pages array - find a better place for it
+    //Set pages array - find a better place for it beginning
     for(let lim = Math.ceil(data.length / this.selectedRowValue), i = 0; i < lim; i++) {
       this.pages[i] = i+1;
     }
+    //Set pages array - find a better place for it ending
+    
+    for(let lim = data.length, i = 0; i < lim; i ++) {
+      data[i].__checked = false;
+    }
+
+    this.list.childKeys.push('__checked');
 
     let filter = data.map((data) => {
       let temp = [];
       for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
         temp.push(data[this.list.childKeys[i]]);
       }
+      
       return temp;
     })
-
+    
     this.arraySourceFinal = filter; 
   }
 }

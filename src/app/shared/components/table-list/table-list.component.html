@@ -15,7 +15,7 @@
     <table *ngIf="!isLoadingList">
       <tr>
         <th id="list-item-checkbox" *ngIf="toolbar.delete">
-          <md-checkbox [checked]="checkAllController" (click)="checkAllListItens()"></md-checkbox>
+          <md-checkbox (change)="checkAllListItens($event.checked)" [checked]="checkAllController"></md-checkbox>
         </th>
 
         <th *ngFor="let header of arrayHeader">
@@ -28,11 +28,11 @@
 
       <tr class="list-item" *ngFor="let data of arraySourceFinal">
         <td *ngIf="toolbar.delete">
-          <md-checkbox class="list-item" [checked]="checkItem" (click)="checkCheckAllController()"></md-checkbox>
+          <md-checkbox class="list-item" [checked]="__last" (change)="checkCheckAllController($event.checked)"></md-checkbox>
         </td>
 
-        <td *ngFor="let item of data">
-          {{ item }}
+        <td *ngFor="let item of data; let __last = last;">
+          <span *ngIf="!__last">{{ item }}</span>
         </td>
 
         <td class="list-item-actions" *ngIf="list.edit">
