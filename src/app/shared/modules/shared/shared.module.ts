@@ -8,6 +8,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { DeleteConfirmComponent } from './../../components/delete-confirm/delete-confirm.component';
 import { ForgotPasswordComponent } from './../../components/forgot-password/forgot-password.component';
 import { FormMultipleAutocompleteComponent } from './../../components/form-multiple-autocomplete/form-multiple-autocomplete.component';
+import { LoginComponent } from './../../components/login/login.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
 import { TableListComponent } from './../../components/table-list/table-list.component';
 
@@ -41,6 +42,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     ForgotPasswordComponent,
     FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
+    LoginComponent,
     PageNotFoundComponent,
     SearchByNamePipe,
     TableListComponent
@@ -51,6 +53,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     ForgotPasswordComponent,
     FormMultipleAutocompleteComponent,
     FormMultipleselectAutocompleteDirective,
+    LoginComponent,
     PageNotFoundComponent,
     SearchByNamePipe,
     TableListComponent

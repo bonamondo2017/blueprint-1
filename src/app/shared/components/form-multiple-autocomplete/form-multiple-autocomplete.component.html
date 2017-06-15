@@ -4,9 +4,9 @@
   </md-input-container>
 
   <md-autocomplete #auto="mdAutocomplete">
-    <md-option *ngFor="let element of array" [value]="option">
-      <span *ngFor="let objArrayElement of generateArray(element)" >
-        {{ objArrayElement }}
+    <md-option *ngFor="let data of arraySourceFinal" [value]="option">
+      <span *ngFor="let item of data" >
+        {{ item }}
       </span>
     </md-option>
   </md-autocomplete>

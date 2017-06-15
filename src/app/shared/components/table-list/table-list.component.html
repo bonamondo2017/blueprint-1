@@ -4,23 +4,67 @@
       <div id="toolbar-title">{{toolbar.title}}</div> 
       <div id="toolbar-spacer"></div>
       <div id="toolbar-action">
-        <md-icon *ngIf="toolbar.delete">delete</md-icon>
+        <md-icon *ngIf="toolbar.delete && checked">delete</md-icon>
         <md-icon *ngIf="toolbar.search">search</md-icon>
         <md-icon *ngIf="toolbar.more">more_vert</md-icon>
       </div>
     </md-toolbar>
+    
+    <md-progress-bar mode="indeterminate" *ngIf="isLoadingList"></md-progress-bar>
 
-    <md-list>
-      <md-list-item>
+    <table *ngIf="!isLoadingList">
+      <tr>
+        <th id="list-item-checkbox" *ngIf="toolbar.delete">
+          <md-checkbox (change)="checkAllListItens($event.checked)" [checked]="checkAllController"></md-checkbox>
+        </th>
 
-      </md-list-item>
+        <th *ngFor="let header of arrayHeader">
+          {{ header }}
+        </th>
 
-      <md-divider></md-divider>
+        <th class="list-item-actions" *ngIf="list.edit || list.delete">
+        </th>
+      </tr>
 
-      <md-list-item>
-        
-      </md-list-item>
-    </md-list>
+      <tr class="list-item" *ngFor="let data of arraySourceFinal">
+        <td *ngIf="toolbar.delete">
+          <md-checkbox class="list-item" [checked]="__last" (change)="checkCheckAllController($event.checked)"></md-checkbox>
+        </td>
+
+        <td *ngFor="let item of data; let __last = last;">
+          <span *ngIf="!__last">{{ item }}</span>
+        </td>
+
+        <td class="list-item-actions" *ngIf="list.edit">
+          <md-icon *ngIf="list.edit">edit</md-icon>
+        </td>
+      </tr>
+    </table>
+
+    <md-toolbar *ngIf="!isLoadingList">
+      <div id="list-controllers">
+        <span>
+          <md-select placeholder="Rows per page" [(ngModel)]="selectedRowValue" name="row">
+            <md-option *ngFor="let row of rows" [value]="row">
+              {{row}}
+            </md-option>
+          </md-select>
+        </span>
+
+        <span>
+          <md-select placeholder="Page" [(ngModel)]="selectedPageValue" name="page">
+            <md-option *ngFor="let page of pages" [value]="page">
+              {{page}}
+            </md-option>
+          </md-select>
+        </span>
+
+        <span>
+          <md-icon>keyboard_arrow_left</md-icon>
+          <md-icon>keyboard_arrow_right</md-icon>
+        </span>
+      </div>
+    </md-toolbar>
   </md-card>
 </div>
 
