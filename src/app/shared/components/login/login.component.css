@@ -2,15 +2,13 @@ hr {
   border: 1px solid #757575;
 }
 
-md-input-container {
-  font-size: 20px;
-  text-decoration: bolder;
-  width: 76%;
+md-card-title {
+  min-height: 70px;
 }
 
-[md-prefix] {
-  padding-right:10px;
-  font-size: 24px;
+md-card-actions>button {
+  left: 35%;
+  width: 30%;
 }
 
 .content {
@@ -25,34 +23,16 @@ md-input-container {
 .logo {
     position: absolute;
     top: 0;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 10px auto 10px auto;
     left: 0;
     right: 0;
     height: 111px;
-}
-
-#button-login {
-  width: 56%;
-  padding: 6px 0 6px 0;
-  color: #fff;
-  font-size: 20px;
-  background: #757575;
 }
 
 #forgot-password {
   margin-top: 10px;
 }
 
-#form {
-  position: absolute;
-  top: 167px;
-  margin-left: auto;
-  margin-right: auto;
-  left: 0;
-  right: 0;
-  text-align: center;
-}
 
 #msg {
     position: absolute;
@@ -80,4 +60,9 @@ md-input-container {
   text-decoration: bolder;
   font-weight: bolder;
   font-size: 20px;
+}
+
+#title-image {
+  background: #CE93D8;
+  min-height: 70px;
 }

@@ -16,6 +16,7 @@ import { AuthenticationService } from './../../shared/services/authentication.se
 })
 export class LoginComponent implements OnInit {
   currentUser: any;
+  databaseInfo: any;
   msg;
 
   constructor(
@@ -23,7 +24,12 @@ export class LoginComponent implements OnInit {
     public dialog: MdDialog,
     public snackBar: MdSnackBar,
     private router: Router
-  ) { }
+  ) {
+    this.databaseInfo = {
+      source: 'firebase',
+      loginMode: 'emailAndPassword'
+    }
+  }
 
   ngOnInit() { }
 
