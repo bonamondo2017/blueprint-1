@@ -1,0 +1,47 @@
+<div class="content">
+  <md-card>
+    <md-card-title>
+      SOMETHINGS
+    </md-card-title>
+  </md-card>
+
+  <form [formGroup]="somethingChildForm" (ngSubmit)="onSubmit()" >
+    <md-card>
+      <md-input-container class="w100p">
+        <input type="text"
+        formControlName="email"
+        mdInput placeholder="E-mail">
+      </md-input-container>
+
+      <md-error *ngIf="somethingChildForm.controls.email.hasError('required') && somethingChildForm.controls.email.touched">
+        Campo obrigatório
+      </md-error>
+
+      <md-error *ngIf="somethingChildForm.controls.email.hasError('minlength') && somethingChildForm.controls.email.touched">
+        Mínimo de 10 caracteres
+      </md-error>
+    </md-card>
+    
+    <md-card>
+      <md-input-container class="w100p">
+        <input type="password"
+        formControlName="password"
+        mdInput placeholder="Password">
+      </md-input-container>
+
+      <md-error *ngIf="somethingChildForm.controls.password.hasError('required') && somethingChildForm.controls.password.touched">
+        Campo obrigatório
+      </md-error>
+
+      <md-error *ngIf="somethingChildForm.controls.password.hasError('minlength') && somethingChildForm.controls.password.touched">
+        Mínimo de 10 caracteres
+      </md-error>
+    </md-card>
+    
+    <md-card>
+      <md-card-actions>
+        <button type="submit" md-raised-button (click)="onSubmit()" [disabled]="!somethingChildForm.valid">Login</button>
+      </md-card-actions>
+    </md-card>
+  </form>
+</div>
