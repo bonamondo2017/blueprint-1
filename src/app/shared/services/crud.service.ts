@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
 
 /*Firebase*/
 import { fbDatabase } from './../../../environments/firebase-database.config';
 
+import { environment } from './../../../environments/environment';
+
+import { Observable } from 'rxjs/Observable';
+
 @Injectable()
 export class CrudService {
+  headersToAuth: Headers;
+  optionsToAuth: RequestOptions;
+  url = environment.urlToApi;
 
-  constructor() {}
+  constructor(private http: Http) { }
 
   /*
     CREATE
@@ -17,473 +25,718 @@ export class CrudService {
     Solução:
     Pensar
   */
-  create = (child: any, objectToPush: any, ...params) => new Promise((resolve, reject) => {
-    let arr: any;
-    let check: any;
-    let countChildIteration: number; //Para ver se é a primeira iteração da child e definir se a acão será push ou update
-    let keyToUpdate: any;//APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
-    let lastKey: any;
-    let lastSubchild: any;
-    let obj: any;
-    let objectFromSpecificKey: any;
-    let ref: any;
-    let ref2: any;
-    let setKey: boolean;
-    
-    if(child.length < 1 || child == undefined) { // Verifica se pelo menos uma child foi definida
-      reject({
-        cod: "c-01",
-        message: "Informar erro c-01 ao administrador"
-      });
-    }
-    
-    for(let i = 0; i < child.length; i++) { //Ryzzan: child to create i
-      check = null;
-      countChildIteration = 0;
-      //obj = {}; //VOLTAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
-      objectFromSpecificKey = {};
-      ref = fbDatabase.ref(child[i]); // Referencia a child onde será inserido o registro
-      setKey = true; // Variável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
-
-      for (let k in objectToPush){ // Loop que varre todos os campos do formulário
-        obj = {}; //APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
-        if(objectToPush.hasOwnProperty(k)) {
-          check = k.split('_'); // Divide a 'tag' de cada formControl (campos do form) criando um array. Ex.: ['field', '0', 'name']
-          if(check[1] == i) { // Verifica se a iteração do formControl (campos do form) corresponde a iteração do loop
-            if(check[0] === "field") { // Verifica se o formControl está configurado como um campo simples
-              if(objectToPush[k] != undefined) {
-                obj[check[2]] = objectToPush[k]; // Insere na variável obj o nome do campo e seu valor
-                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
-                if(countChildIteration < 1) {
-                  if(setKey) { // Verifica se é a chave principal ou a sub-child
-                    let key = ref.push(obj).key; // Cria a chave principal
-                    
-                    lastKey = {
-                      key: key, // Retorna a key do objeto recém criado
-                      child: child[i] // Retorna o nome da child principal
-                    }
-
-                    keyToUpdate = key;
-                  } else {
-                    let key = ref.push(obj).key;
-                    keyToUpdate = key;
-                  }
-                } else {
-                  ref2 = fbDatabase.ref(child[i]+"/"+keyToUpdate);
-                  ref2.update(obj);
-                }
-                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
-              }
-            }
-            
-            if(check[0] === "updateFromSpecificKey") { // Identifica o campo como um array de valores dentro da uma child recém criada
-              if(objectToPush[k] != undefined || objectToPush[k] != ""){
-                if(Array.isArray(objectToPush[k]))
-                  arr = objectToPush[k]; // Cria um array com todos os elementos que serão inseridos dentro da child recém criada
-                else
-                  arr = objectToPush[k].split(";");
-                for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém criada
-                  ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
-                  objectFromSpecificKey[arr[j].__key] = arr[j]; // Inseri na variável objectFromSpecificKey todos os elementos com valor true
-                  ref2.update(objectFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
-                }
-              }
-              setKey = false; // Identifica a existência de uma sub-child (child dentro de child)
-            }
-
-            /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela início*/
-            if(check[0] === "subchild") { //Flag para a subchild por vir
-              if(objectToPush[k] != undefined) {
-                lastSubchild = check[2];
-              }
-            }
-
-            if(check[0] === "subchildPropertyAndValue") { //Mordendo a língua sobre a crítica a respeito dos métodos Java
-              if(objectToPush[k] != "" && objectToPush[k] != null && objectToPush[k] != undefined && lastSubchild != undefined) {
-                obj[check[2]] = objectToPush[k];
-
-                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
-                if(countChildIteration < 1) {
-                  if(setKey) { // Verifica se é a chave principal ou a sub-child
-                    ref2 = fbDatabase.ref(child[i]+"/"+lastSubchild);
-                    let key = ref2.push(obj).key; // Cria a chave principal
-                    
-                    lastKey = {
-                      key: key, // Retorna a key do objeto recém criado
-                      child: child[i] // Retorna o nome da child principal
-                    }
-
-                    keyToUpdate = key;
-                  } else {
-                    let key = ref.push(obj).key;
-                    keyToUpdate = key;
-                  }
-                } else {
-                  ref2 = fbDatabase.ref(child[i]+"/"+keyToUpdate).child(lastSubchild);
-                  ref2.update(obj);
-                }
-                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
-              }
-            }
-
-            /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela fim*/
-            
-            /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
-            if(check[0] != "subchild" && (countChildIteration == 0 && objectToPush[k] != undefined)) { //Preocupação em não faze o count caso newSubChild seja o primeiro elemento do form
-              countChildIteration ++;
-            }
-            /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
-          }
-        }
-      }
-
-      /*VOLTAR NO CASO DE RESOLVER MELHORA DA PERFORMANCE INÍCIO*/
-      /*if(setKey) { // Verifica se é a chave principal ou a sub-child
-        let key = ref.push(obj).key; // Cria a chave principal
+  create = (source, params) => new Promise((resolve, reject) => {
+    switch(source) {
+      case 'firebase':
+        let arr: any;
+        let check: any;
+        let countChildIteration: number; //Para ver se é a primeira iteração da child e definir se a acão será push ou update
+        let keyToUpdate: any;//APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
+        let lastKey: any;
+        let lastSubchild: any;
+        let obj: any;
+        let objectFromSpecificKey: any;
+        let ref: any;
+        let ref2: any;
+        let setKey: boolean;
         
-        lastKey = {
-          key: key, // Retorna a key do objeto recém criado
-          child: child[i] // Retorna o nome da child principal
+        if(params.child.length < 1 || params.child == undefined) { // Verifica se pelo menos uma child foi definida
+          reject({
+            cod: "c-01",
+            message: "Informar erro c-01 ao administrador"
+          });
         }
-      } else {
-        ref.push(obj);
-      }*/
-    /*VOLTAR NO CASO DE RESOLVER MELHORA DA PERFORMANCE FIM*/
-    }
+        
+        for(let i = 0; i < params.child.length; i++) { //Ryzzan: child to create i
+          check = null;
+          countChildIteration = 0;
+          //obj = {}; //VOLTAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
+          objectFromSpecificKey = {};
+          ref = fbDatabase.ref(params.child[i]); // Referencia a child onde será inserido o registro
+          setKey = true; // Variável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
 
-    resolve({
-      cod: "c-02",
-      message: "Cadastro feito com sucesso"//Cadastro feito com sucesso
-    });
-  })
+          for (let k in params.objectToPush){ // Loop que varre todos os campos do formulário
+            obj = {}; //APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
+            if(params.objectToPush.hasOwnProperty(k)) {
+              check = k.split('_'); // Divide a 'tag' de cada formControl (campos do form) criando um array. Ex.: ['field', '0', 'name']
+              if(check[1] == i) { // Verifica se a iteração do formControl (campos do form) corresponde a iteração do loop
+                if(check[0] === "field") { // Verifica se o formControl está configurado como um campo simples
+                  if(params.objectToPush[k] != undefined) {
+                    obj[check[2]] = params.objectToPush[k]; // Insere na variável obj o nome do campo e seu valor
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                    if(countChildIteration < 1) {
+                      if(setKey) { // Verifica se é a chave principal ou a sub-child
+                        let key = ref.push(obj).key; // Cria a chave principal
+                        
+                        lastKey = {
+                          key: key, // Retorna a key do objeto recém criado
+                          child: params.child[i] // Retorna o nome da child principal
+                        }
 
-  readArray = (params) => new Promise((resolve, reject) => {
-    /*
-    RYZZAN
-    child: child,
-    attributes: [childs.attributes],
-    filters:[[orderByChild1][equalTo]],
-    limit: [start, finish] //if only one array is set, set start as 1 and the only set value will be finish
-    */
-    let child;
-    let orderByChild;
-    let equalTo;
+                        keyToUpdate = key;
+                      } else {
+                        let key = ref.push(obj).key;
+                        keyToUpdate = key;
+                      }
+                    } else {
+                      ref2 = fbDatabase.ref(params.child[i]+"/"+keyToUpdate);
+                      ref2.update(obj);
+                    }
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
+                  }
+                }
+                
+                if(check[0] === "updateFromSpecificKey") { // Identifica o campo como um array de valores dentro da uma child recém criada
+                  if(params.objectToPush[k] != undefined || params.objectToPush[k] != ""){
+                    if(Array.isArray(params.objectToPush[k]))
+                      arr = params.objectToPush[k]; // Cria um array com todos os elementos que serão inseridos dentro da child recém criada
+                    else
+                      arr = params.objectToPush[k].split(";");
+                    for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém criada
+                      ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(params.child[i]); // Referencia a sub-child onde será inserido o registro
+                      objectFromSpecificKey[arr[j].__key] = arr[j]; // Inseri na variável objectFromSpecificKey todos os elementos com valor true
+                      ref2.update(objectFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
+                    }
+                  }
+                  setKey = false; // Identifica a existência de uma sub-child (child dentro de child)
+                }
 
-    let ref;
-    let key;
-    let obj;
-    let objFiltered = [];
-    let res;
+                /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela início*/
+                if(check[0] === "subchild") { //Flag para a subchild por vir
+                  if(params.objectToPush[k] != undefined) {
+                    lastSubchild = check[2];
+                  }
+                }
 
-    if(!params) {
-      reject({
-        cod: "ra-01",
-        message: "Informar erro ra-01 ao administrador"//Checar parâmetros obrigatórios
-      });
-    }
+                if(check[0] === "subchildPropertyAndValue") { //Mordendo a língua sobre a crítica a respeito dos métodos Java
+                  if(params.objectToPush[k] != "" && params.objectToPush[k] != null && params.objectToPush[k] != undefined && lastSubchild != undefined) {
+                    obj[check[2]] = params.objectToPush[k];
 
-    if(!params.child) {
-      reject({
-        cod: "ra-02",
-        message: "Informar erro ra-02 ao administrador"//É preciso declarar ao menos um child"
-      });
-    }
-    
-    if(params.orderByChild) {
-      if(!params.equalTo) {
-        reject({
-          cod: "ra-03",
-          message: "Informar erro ra-03 ao administrador"//É preciso declarar um equalTo referente ao orderByChild
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                    if(countChildIteration < 1) {
+                      if(setKey) { // Verifica se é a chave principal ou a sub-child
+                        ref2 = fbDatabase.ref(params.child[i]+"/"+lastSubchild);
+                        let key = ref2.push(obj).key; // Cria a chave principal
+                        
+                        lastKey = {
+                          key: key, // Retorna a key do objeto recém criado
+                          child: params.child[i] // Retorna o nome da child principal
+                        }
+
+                        keyToUpdate = key;
+                      } else {
+                        let key = ref.push(obj).key;
+                        keyToUpdate = key;
+                      }
+                    } else {
+                      ref2 = fbDatabase.ref(params.child[i]+"/"+keyToUpdate).child(lastSubchild);
+                      ref2.update(obj);
+                    }
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
+                  }
+                }
+
+                /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela fim*/
+                
+                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                if(check[0] != "subchild" && (countChildIteration == 0 && params.objectToPush[k] != undefined)) { //Preocupação em não faze o count caso newSubChild seja o primeiro elemento do form
+                  countChildIteration ++;
+                }
+                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
+              }
+            }
+          }
+
+          /*VOLTAR NO CASO DE RESOLVER MELHORA DA PERFORMANCE INÍCIO*/
+          /*if(setKey) { // Verifica se é a chave principal ou a sub-child
+            let key = ref.push(obj).key; // Cria a chave principal
+            
+            lastKey = {
+              key: key, // Retorna a key do objeto recém criado
+              child: child[i] // Retorna o nome da child principal
+            }
+          } else {
+            ref.push(obj);
+          }*/
+        /*VOLTAR NO CASO DE RESOLVER MELHORA DA PERFORMANCE FIM*/
+        }
+
+        resolve({
+          cod: "c-02",
+          message: "Cadastro feito com sucesso"//Cadastro feito com sucesso
         });
-      }
-
-      orderByChild = params.orderByChild;
-      equalTo = params.equalTo;
-    }
-
-    child = params.child;
-
-    ref = fbDatabase.ref(child);
-    
-    if(orderByChild) {
-      ref
-      .orderByChild(orderByChild)
-      .equalTo(equalTo)
-      .on('value', snap => {
-        if(snap.val() != null) {
-          res = snap.val();
-          key = Object.keys(res);
-          
-          obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
-          for(let i=0; i<Object.keys(res).length; i++){
-            obj[i].__key = key[i];
-          }
-
-          if(params.keys) {
-            for(let i= 0; i < obj.length; i++) {
-              let temp = {};
-
-              for(let j = 0; j < params.keys.length; j++) {
-                temp[params.keys[j]] = obj[i][params.keys[j]];
-              }
-
-              /*Object.keys(obj[i])
-              .map(k => {
-                for(let j = 0; j < params.keys.length; j++) {
-                  if(k == params.keys[j]) {
-                    temp[k] = obj[i][k];
-                  }
-                }
-              })*/
-              objFiltered.push(temp);
-            }
-            
-            resolve(objFiltered);
-          } else {
-            resolve(obj);
-          }
+      break;
+      
+      case 'laravel':
+        let apiUrl: string = this.url;
+        let objectToCreate: any = params.objectToCreate;
+        let route: string = params.route;
+        
+        if(!route) { // Verifica se pelo menos uma child foi definida
+          reject({
+            cod: "c-01",
+            message: "Informar erro c-01 ao administrador"
+          });
         }
-      })
-    } else {
-      ref
-      .once('value')
-      .then(snap => {
-        if(snap.val() != null) {
-          res = snap.val();
-          key = Object.keys(res);
-          obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
-          
-          for(let i=0; i<Object.keys(res).length; i++){
-            obj[i].__key = key[i];
-          }
-          
-          if(params.keys) {
-            for(let i= 0; i < obj.length; i++) {
-              let temp = {};
 
-              for(let j = 0; j < params.keys.length; j++) {
-                temp[params.keys[j]] = obj[i][params.keys[j]];
-              }
+        this.headersToAuth = new Headers({
+          'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('access_token')
+        });
 
-              /*Object.keys(obj[i])
-              .map(k => {
-                for(let j = 0; j < params.keys.length; j++) {
-                  if(k == params.keys[j]) {
-                    temp[k] = obj[i][k];
-                  }
-                }
-              })*/
-              objFiltered.push(temp);
-            }
-            
-            resolve(objFiltered);
-          } else {
-            resolve(obj);
-          }
-        } else {
+        this.optionsToAuth = new RequestOptions({
+          'headers': this.headersToAuth
+        })
+
+        this.http
+        .post(
+          apiUrl+route,
+          objectToCreate,
+          this.optionsToAuth
+        ).subscribe(res => {
           resolve({
-            cod: "ra-03",
-            message: "Nenhum cadastro"//É preciso declarar ao menos um child"
+            cod: "c-02",
+            message: "Cadastro feito com sucesso"//Cadastro feito com sucesso
           });
-        }
-      })
+        })
+      break;
+
+      default:
+        console.log("Faltando source")
     }
   })
 
-  readObject = (params) => new Promise((resolve, reject) => {
-    /*
-    RYZZAN
-    child: child,
-    attributes: [childs.attributes],
-    filters:[[orderByChild1][equalTo]],
-    limit: [start, finish] //if only one array is set, set start as 1 and the only set value will be finish
-    */
-    let child;
-    let orderByChild;
-    let equalTo;
+  readArray = (source, params) => new Promise((resolve, reject) => {
+    switch(source) {
+      case 'firebase':
+        /*
+        RYZZAN
+        child: child,
+        attributes: [childs.attributes],
+        filters:[[orderByChild1][equalTo]],
+        limit: [start, finish] //if only one array is set, set start as 1 and the only set value will be finish
+        */
+        let child;
+        let orderByChild;
+        let equalTo;
 
-    let ref;
-    let key;
-    let obj;
-    let res;
+        let ref;
+        let key;
+        let obj;
+        let objFiltered = [];
+        let objKeys;
+        let res;
 
-    if(!params) {
-      reject({
-        cod: "ro-01",
-        message: "Informar erro ro-01 ao administrador"//Checar parâmetros obrigatórios
-      });
-    }
-
-    if(!params.child) {
-      reject({
-        cod: "ro-02",
-        message: "Informar erro ro-02 ao administrador"//É preciso declarar ao menos um child
-      });
-    }
-
-    if(params.orderByChild) {
-      if(!params.equalTo) {
-        reject({
-          cod: "ro-03",
-          message: "Informar erro ro-03 ao administrador"//É preciso declarar um equalTo referente ao orderByChild
-        });
-      }
-
-      orderByChild = params.orderByChild;
-      equalTo = params.equalTo;
-    }
-    
-    child = params.child;
-
-    ref = fbDatabase.ref(child);
-
-    if(orderByChild) {
-      ref
-      .orderByChild(orderByChild)
-      .equalTo(equalTo)
-      .once('value')
-      .then(snap => {
-        res = snap.val();
-
-        if(res === null) {
+        if(!params) {
           reject({
-            cod: "ro-04",
-            message: "Nenhum dado gravado na child " + child
+            cod: "ra-01",
+            message: "Informar erro ra-01 ao administrador"//Checar parâmetros obrigatórios
           });
-        } else {
-          key = Object.keys(res);
-          obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
-          obj[0].__key = key[0];
-          resolve(obj[0]);
         }
-      })
-    } else {
-      ref
-      .once('value')
-      .then(snap => {
-        res = snap.val();
+
+        if(!params.child) {
+          reject({
+            cod: "ra-02",
+            message: "Informar erro ra-02 ao administrador"//É preciso declarar ao menos um child"
+          });
+        }
         
-        if(res === null) {
-          reject({
-            cod: "ro-04",
-            message: "Nenhum dado gravado na child " + child
-          });
-        } else {
-          key = Object.keys(res);
-          obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
-          obj[0].__key = key[0];
-          resolve(obj[0]);
+        if(params.orderByChild) {
+          if(!params.equalTo) {
+            reject({
+              cod: "ra-03",
+              message: "Informar erro ra-03 ao administrador"//É preciso declarar um equalTo referente ao orderByChild
+            });
+          }
+
+          orderByChild = params.orderByChild;
+          equalTo = params.equalTo;
         }
-      })
+
+        child = params.child;
+
+        ref = fbDatabase.ref(child);
+        
+        if(orderByChild) {
+          ref
+          .orderByChild(orderByChild)
+          .equalTo(equalTo)
+          .on('value', snap => {
+            if(snap.val() != null) {
+              res = snap.val();
+              key = Object.keys(res);
+              
+              obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
+              for(let i=0; i<Object.keys(res).length; i++){
+                obj[i].__key = key[i];
+              }
+
+              if(params.keys) {
+                for(let i= 0; i < obj.length; i++) {
+                  let temp = {};
+
+                  for(let j = 0; j < params.keys.length; j++) {
+                    temp[params.keys[j]] = obj[i][params.keys[j]];
+                  }
+
+                  /*Object.keys(obj[i])
+                  .map(k => {
+                    for(let j = 0; j < params.keys.length; j++) {
+                      if(k == params.keys[j]) {
+                        temp[k] = obj[i][k];
+                      }
+                    }
+                  })*/
+                  objFiltered.push(temp);
+                }
+                
+                resolve(objFiltered);
+              } else {
+                resolve(obj);
+              }
+            }
+          })
+        } else {
+          ref
+          .once('value')
+          .then(snap => {
+            if(snap.val() != null) {
+              res = snap.val();
+              key = Object.keys(res);
+              obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
+              
+              for(let i=0; i<Object.keys(res).length; i++){
+                obj[i].__key = key[i];
+              }
+              
+              if(params.keys) {
+                for(let i= 0; i < obj.length; i++) {
+                  let temp = {};
+
+                  for(let j = 0; j < params.keys.length; j++) {
+                    temp[params.keys[j]] = obj[i][params.keys[j]];
+                  }
+
+                  /*Object.keys(obj[i])
+                  .map(k => {
+                    for(let j = 0; j < params.keys.length; j++) {
+                      if(k == params.keys[j]) {
+                        temp[k] = obj[i][k];
+                      }
+                    }
+                  })*/
+                  objFiltered.push(temp);
+                }
+                
+                resolve(objFiltered);
+              } else {
+                resolve(obj);
+              }
+            } else {
+              resolve({
+                cod: "ra-03",
+                message: "Nenhum cadastro"//É preciso declarar ao menos um child"
+              });
+            }
+          })
+        }
+      break;
+
+      case "laravel":
+        let apiUrl: string = this.url;
+        let fieldsToShow: string = ''; //E.g.: [field1, field2, field3]
+        let fieldsToHide: string = ''; //E.g.: [field1, field2, field3]
+        let objFilteredTemp: any = [];
+        let orderBy: any;
+        let route: string = params.route;
+        let setGet: string = '';
+        let where: any; //E.g.: [[field1, operator1, value1], [field2, operator2, value2], [field3, operator3, value3]]
+        
+        if(!params) {
+          reject({
+            cod: "ra-01",
+            message: "Informar erro ra-01 ao administrador"//Checar parâmetros obrigatórios
+          });
+        }
+
+        if(params.fieldsToShow && params.fieldsToHide) {
+          reject({
+            cod: "ra-02",
+            message: "Informar erro ra-03 ao administrador"//Não pode declarar os dois parâmetros ao mesmo tempo
+          });
+        }
+
+        if(!params.route) {
+          reject({
+            cod: "ra-03",
+            message: "Informar erro ra-04 ao administrador"//É preciso declarar a rota do serviço
+          });
+        }
+
+        if(params.fieldsToShow) {
+          setGet = "?";
+          fieldsToShow = "fieldsToShow=";
+          
+          for(let lim = params.fieldsToShow.length, i =0; i < lim; i++) {
+            fieldsToShow += params.fieldsToShow[i]+",";            
+          }
+
+          fieldsToShow = fieldsToShow.substring(0, fieldsToShow.length - 1);
+        }
+
+        if(params.fieldsToHide) {
+          setGet = "?";
+          fieldsToHide = "fieldsToHide=";
+          
+          for(let lim = params.fieldsToHide.length, i =0; i < lim; i++) {
+            fieldsToHide += params.fieldsToHide[i]+",";            
+          }
+
+          fieldsToHide = fieldsToHide.substring(0, fieldsToHide.length - 1);
+        }
+        
+        this.headersToAuth = new Headers({
+          'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('access_token')
+        });
+
+        this.optionsToAuth = new RequestOptions({
+          'headers': this.headersToAuth
+        })
+        
+        this.http
+        .get(
+          apiUrl+route+setGet+fieldsToShow+fieldsToHide,
+          this.optionsToAuth
+        ).subscribe(res => {
+          obj = JSON.parse(res['_body']);
+          objFiltered = obj.data;
+          objKeys = Object.keys(objFiltered);
+          
+          if(params.fieldsToShow) {
+            objFilteredTemp = obj.data;
+            objFiltered = [];
+            
+            for(let lim = objFilteredTemp.length, i =0; i < lim; i++) {
+              let temp = {};
+
+              for(let j = 0; j < params.fieldsToShow.length; j++) {
+                temp[params.fieldsToShow[j]] = objFilteredTemp[i][params.fieldsToShow[j]];
+              }
+
+              objFiltered.push(temp);
+            }
+            
+            resolve({
+              objFiltered
+            });
+          } else {
+            resolve({
+              objFiltered
+            });
+          }
+        })
+      break;
+
+      default:
+        console.log("Faltando source")
+    }
+  })
+
+  readObject = (source, params) => new Promise((resolve, reject) => {
+    switch(source) {
+      case 'firebase':
+        /*
+        RYZZAN
+        child: child,
+        attributes: [childs.attributes],
+        filters:[[orderByChild1][equalTo]],
+        limit: [start, finish] //if only one array is set, set start as 1 and the only set value will be finish
+        */
+        let child;
+        let orderByChild;
+        let equalTo;
+
+        let ref;
+        let key;
+        let obj;
+        let res;
+
+        if(!params) {
+          reject({
+            cod: "ro-01",
+            message: "Informar erro ro-01 ao administrador"//Checar parâmetros obrigatórios
+          });
+        }
+
+        if(!params.child) {
+          reject({
+            cod: "ro-02",
+            message: "Informar erro ro-02 ao administrador"//É preciso declarar ao menos um child
+          });
+        }
+
+        if(params.orderByChild) {
+          if(!params.equalTo) {
+            reject({
+              cod: "ro-03",
+              message: "Informar erro ro-03 ao administrador"//É preciso declarar um equalTo referente ao orderByChild
+            });
+          }
+
+          orderByChild = params.orderByChild;
+          equalTo = params.equalTo;
+        }
+        
+        child = params.child;
+
+        ref = fbDatabase.ref(child);
+
+        if(orderByChild) {
+          ref
+          .orderByChild(orderByChild)
+          .equalTo(equalTo)
+          .once('value')
+          .then(snap => {
+            res = snap.val();
+
+            if(res === null) {
+              reject({
+                cod: "ro-04",
+                message: "Nenhum dado gravado na child " + child
+              });
+            } else {
+              key = Object.keys(res);
+              obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
+              obj[0].__key = key[0];
+              resolve(obj[0]);
+            }
+          })
+        } else {
+          ref
+          .once('value')
+          .then(snap => {
+            res = snap.val();
+            
+            if(res === null) {
+              reject({
+                cod: "ro-04",
+                message: "Nenhum dado gravado na child " + child
+              });
+            } else {
+              key = Object.keys(res);
+              obj = Object.keys(res).map(k => res[k]); //Tranformando objetos em arrays
+              obj[0].__key = key[0];
+              resolve(obj[0]);
+            }
+          })
+        }
+      break;
+
+      case 'laravel':
+        let apiUrl: string = this.url;
+        let route: string = params.route;
+        let value: string = params.value;
+
+        if(!route) {
+          reject({
+            cod: "ro-01",
+            message: "Informar erro ro-01 ao administrador"
+          });
+        }
+
+        if(!value) {
+          reject({
+            cod: "ro-02",
+            message: "Informar erro ro-02 ao administrador"
+          });
+        }
+
+        this.headersToAuth = new Headers({
+          'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('access_token')
+        });
+
+        this.optionsToAuth = new RequestOptions({
+          'headers': this.headersToAuth
+        })
+
+        this.http
+        .get(
+          apiUrl+route+"/"+value,
+          this.optionsToAuth
+        ).subscribe(res => {
+          obj = JSON.parse(res['_body']);
+          
+          resolve({
+            obj
+          });
+        })
+      break;
+
+      default:
+        console.log("Faltando source");
     }
   })
   
-  update = (child: any, idChildToUpdate: any, objectToUpdate: any, ...params) => new Promise((resolve, reject) => {
-    let arr: any;
-    let check: any;
-    let countChildIteration: number;
-    let lastKey: any;
-    let lastSubchild: any;
-    let obj: any;
-    let ref: any;
-    let ref2: any;
-    let setKey: boolean;
-    let updateFromSpecificKey: any;
+  update = (source, params) => new Promise((resolve, reject) => {
+    switch(source) {
+      case 'firebase':
+        let arr: any;
+        let check: any;
+        let child: any = params.child;
+        let countChildIteration: number;
+        let idChildToUpdate: any = params.idChildToUpdate;
+        let lastKey: any;
+        let lastSubchild: any;
+        let obj: any;
+        let objectToUpdate: any = params.objectToUpdate;
+        let ref: any;
+        let ref2: any;
+        let setKey: boolean;
+        let updateFromSpecificKey: any;
 
-    if(child.length < 1 || child == undefined) { // Verifica se pelo menos uma child foi definida
-      reject({
-        cod: "c-01",
-        message: "Informar erro c-01 ao administrador"
-      });
-    }
+        if(child.length < 1 || child == undefined) { // Verifica se pelo menos uma child foi definida
+          reject({
+            cod: "u-01",
+            message: "Informar erro u-01 ao administrador"
+          });
+        }
 
-    for(let i = 0; i < child.length; i++) { //child to create in
-      if(idChildToUpdate[i]) {
-        ref = fbDatabase.ref(child[i]).child(idChildToUpdate[i]); // Referencia a child com o registro que será atualizado
-      } 
-      
-      check = null;
-      countChildIteration = 0;
-      obj = {};
-      setKey = true; // Varável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
-      updateFromSpecificKey = {};
+        for(let i = 0; i < child.length; i++) { //child to create in
+          if(idChildToUpdate[i]) {
+            ref = fbDatabase.ref(child[i]).child(idChildToUpdate[i]); // Referencia a child com o registro que será atualizado
+          } 
+          
+          check = null;
+          countChildIteration = 0;
+          obj = {};
+          setKey = true; // Varável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
+          updateFromSpecificKey = {};
 
-      for(let k in objectToUpdate){ // Loop que varre todos os campos do formulário
-        if(objectToUpdate.hasOwnProperty(k)) {
-          check = k.split('_'); // Divide a 'tag' de cada formControl (campos do form) criando um array. Ex.: ['field', '0', 'name']
+          for(let k in objectToUpdate){ // Loop que varre todos os campos do formulário
+            if(objectToUpdate.hasOwnProperty(k)) {
+              check = k.split('_'); // Divide a 'tag' de cada formControl (campos do form) criando um array. Ex.: ['field', '0', 'name']
 
-          if(check[1] == i) { // Verifica se a iteração do formControl (campos do form) corresponde a iteração do loop
-            if(check[0] === "field") { // Verifica se o formControl está configurado como um campo simples
-              if(objectToUpdate[k] != undefined)
-                obj[check[2]] = objectToUpdate[k]; // Inseri na variável obj o nome do campo e seu valor
-            }
+              if(check[1] == i) { // Verifica se a iteração do formControl (campos do form) corresponde a iteração do loop
+                if(check[0] === "field") { // Verifica se o formControl está configurado como um campo simples
+                  if(objectToUpdate[k] != undefined)
+                    obj[check[2]] = objectToUpdate[k]; // Inseri na variável obj o nome do campo e seu valor
+                }
 
-            if(check[0] === "updateFromSpecificKey") { // Identifica o campo como um array de valores dentro da uma child recém atualizada
-              if(objectToUpdate[k] != undefined){
-                if(Array.isArray(objectToUpdate[k]))
-                  arr = objectToUpdate[k]; // Cria um array com todos os elementos que serão inseridos dentro da child recém criada
-                else
-                  arr = objectToUpdate[k].split(";");
-                fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]).remove(); // Apaga todos os registros na sub-child antes de povoá-los com os dados atualizados
+                if(check[0] === "updateFromSpecificKey") { // Identifica o campo como um array de valores dentro da uma child recém atualizada
+                  if(objectToUpdate[k] != undefined){
+                    if(Array.isArray(objectToUpdate[k]))
+                      arr = objectToUpdate[k]; // Cria um array com todos os elementos que serão inseridos dentro da child recém criada
+                    else
+                      arr = objectToUpdate[k].split(";");
+                    fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]).remove(); // Apaga todos os registros na sub-child antes de povoá-los com os dados atualizados
 
-                for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém atualizada
-                  ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
-                  updateFromSpecificKey[arr[j]] = 1; // Inseri na variável updateFromSpecificKey todos os elementos com valor true
-                  ref2.set(updateFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
+                    for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém atualizada
+                      ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(child[i]); // Referencia a sub-child onde será inserido o registro
+                      updateFromSpecificKey[arr[j]] = 1; // Inseri na variável updateFromSpecificKey todos os elementos com valor true
+                      ref2.set(updateFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
+                    }
+                  }
+                  setKey = false; // Identifica a existência de uma sub-child (child dentro de child)
+                }
+
+                /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela início*/
+                if(check[0] === "subchild") { //Flag para a subchild por vir
+                  if(objectToUpdate[k] != undefined) {
+                    lastSubchild = check[2];
+                  }
+                }
+
+                if(objectToUpdate[k] != undefined && lastSubchild != undefined) {
+                  obj[check[2]] = objectToUpdate[k];
+
+                  /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                  if(countChildIteration < 1) {
+                    if(setKey) { // Verifica se é a chave principal ou a sub-child
+                      ref2 = fbDatabase.ref(child[i]+"/"+lastSubchild);
+                      let key = ref2.push(obj).key; // Cria a chave principal
+                      
+                    } else {
+                      let key = ref.push(obj).key;
+                    }
+                  } else {
+                    ref2 = fbDatabase.ref(child[i]+"/"+idChildToUpdate[i]).child(lastSubchild);
+                    ref2.update(obj);
+                  }
+                  /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
                 }
               }
-              setKey = false; // Identifica a existência de uma sub-child (child dentro de child)
-            }
-
-            /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela início*/
-            if(check[0] === "subchild") { //Flag para a subchild por vir
-              if(objectToUpdate[k] != undefined) {
-                lastSubchild = check[2];
-              }
-            }
-
-            if(objectToUpdate[k] != undefined && lastSubchild != undefined) {
-              obj[check[2]] = objectToUpdate[k];
 
               /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
-              if(countChildIteration < 1) {
-                if(setKey) { // Verifica se é a chave principal ou a sub-child
-                  ref2 = fbDatabase.ref(child[i]+"/"+lastSubchild);
-                  let key = ref2.push(obj).key; // Cria a chave principal
-                  
-                } else {
-                  let key = ref.push(obj).key;
-                }
-              } else {
-                ref2 = fbDatabase.ref(child[i]+"/"+idChildToUpdate[i]).child(lastSubchild);
-                ref2.update(obj);
+              if(check[0] != "subchild") { //Preocupação em não faze o count caso newSubChild seja o primeiro elemento do form
+                countChildIteration ++;
               }
               /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
             }
           }
-
-          /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
-          if(check[0] != "subchild") { //Preocupação em não faze o count caso newSubChild seja o primeiro elemento do form
-            countChildIteration ++;
+          if(setKey) { // Verifica se é a chave principal ou a sub-child
+            ref.set(obj); // Atualiza a child principal
+            lastKey = {
+              key: idChildToUpdate[i], // Retorna a key da child principal
+              child: child[i] // Retorna o nome da child principal
+            }
+          } else {
+            ref.update(obj);
           }
-          /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
         }
-      }
-      if(setKey) { // Verifica se é a chave principal ou a sub-child
-        ref.set(obj); // Atualiza a child principal
-        lastKey = {
-          key: idChildToUpdate[i], // Retorna a key da child principal
-          child: child[i] // Retorna o nome da child principal
-        }
-      } else {
-        ref.update(obj);
-      }
-    }
 
-    resolve({
-      cod: "u-01",
-      message: "Atualização feita com sucesso" //Atualização feita com sucesso
-    });
+        resolve({
+          cod: "u-02",
+          message: "Atualização feita com sucesso" //Atualização feita com sucesso
+        });
+      break;
+
+      case 'laravel':
+        let apiUrl: string = this.url;
+        let objectToCreate: any = params.objectToCreate;
+        let route: string = params.route;
+        let value: string = params.value;
+
+        if(!route) {
+          reject({
+            cod: "u-01",
+            message: "Informar erro u-01 ao administrador"
+          });
+        }
+
+        if(!value) {
+          reject({
+            cod: "u-02",
+            message: "Informar erro u-02 ao administrador"
+          });
+        }
+
+        this.headersToAuth = new Headers({
+          'Content-Type': 'application/json',
+          'Authorization': sessionStorage.getItem('access_token')
+        });
+
+        this.optionsToAuth = new RequestOptions({
+          'headers': this.headersToAuth
+        })
+
+        this.http
+        .put(
+          apiUrl+route+"/"+value,
+          objectToCreate,
+          this.optionsToAuth
+        ).subscribe(res => {
+          resolve({
+            cod: "u-03",
+            message: "Atualização feita com sucesso"
+          });
+        })
+      break;
+
+      default:
+        console.log("Faltando source");
+    }
   })
   
   delete = (child: any, idChildToDelete: any, childRelated: any, ...params) => new Promise((resolve, reject) => {

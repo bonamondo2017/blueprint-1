@@ -63,7 +63,7 @@
 
     <md-card>
       <md-card-actions>
-        <div *ngIf="somethingChilmd-ind == undefined">
+        <div *ngIf="somethingChild == undefined">
           <button type="submit" md-raised-button (click)="onSubmit()" [disabled]="!somethingChildForm.valid">Create</button>
         </div>
 
@@ -82,12 +82,12 @@
     </md-card-title>
     <span *ngIf="isLoading"><md-progress-bar mode="indeterminate"></md-progress-bar></span>
     <span *ngIf="!isLoading && !somethingsChild"> There is nothing in this list </span>
-    <div *ngFor="let somethingChild of somethingsChild;">
+    <div *ngFor="let somethingChild of somethingsChild; let i = index;">
       <span *ngIf="!isLoading" class="w80p">
-        <a (click)="delete(somethingChild.__key)">
+        <a (click)="delete(somethingChild[i].id)">
           <md-icon>delete_forever</md-icon>
         </a>
-        <a (click)="readSomethingChild(somethingChild.simpleInput)">{{ somethingChild.simpleInput }}</a>        
+        <a (click)="readSomethingChild(somethingChild[i].name)">{{ somethingChild[i].name }}</a>        
       </span>
     </div>
   </md-card>

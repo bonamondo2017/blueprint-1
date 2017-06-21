@@ -69,7 +69,7 @@ export class FormComponent implements OnInit {
   create = () => {
     this.somethingChildObject = this.somethingChildForm.value;
     if(this.somethingChildForm.valid){ // Verifica se o FormGroup é válido
-      this.crud.create(this.child, this.somethingChildObject); // cadastra o product Class no banco
+      this.crud.create('firebase', {child: this.child, objectToPush: this.somethingChildObject}); // cadastra o product Class no banco
       this.somethingChild = undefined;
       this.readSomethingsChild(); // Traz os producs Classs cadastrado no banco incluindo o que acabou de ser criado
       this.somethingChildForm.reset(); // Apaga as informações no form
@@ -103,7 +103,7 @@ export class FormComponent implements OnInit {
   }
 
   readSomethingsChild = () => {
-    this.crud.readArray({
+    this.crud.readArray('firebase', {
       child: 'somethingsChild'
     })
     .then(res => {
@@ -122,7 +122,7 @@ export class FormComponent implements OnInit {
   }
 
   readSomethingChild = (value) => {
-    this.crud.readObject({
+    this.crud.readObject('firebase', {
       child: 'somethingsChild',
       orderByChild: 'simpleInput',
       equalTo: value
@@ -139,7 +139,7 @@ export class FormComponent implements OnInit {
     this.somethingChildObject = this.somethingChildForm.value;
     
     if(this.somethingChildForm.valid){ // Verifica se o FormGroup é válido
-      this.crud.update(this.child, [this.somethingChild.__key], this.somethingChildObject); // atualiza o product Class no banco
+      this.crud.update('firebase', { child: this.child, idChildToUpdate: [this.somethingChild.__key], objectToUpdate: this.somethingChildObject}); // atualiza o product Class no banco
       this.somethingChild = undefined;
       this.readSomethingsChild(); // Traz os producs Classs cadastrado no banco incluindo o que acabou de ser atualizado
       this.somethingChildForm.reset(); // Apaga as informações no form
