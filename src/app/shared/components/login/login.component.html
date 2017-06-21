@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <div class="background"></div>
 
 <md-card class="content">
@@ -44,3 +45,64 @@
     <a routerLink="/signup">Signup</a>
   </div>
 </md-card>
+=======
+<div class="content" *ngIf="error.length < 1">
+  <md-card id="title-image" *ngIf="elementInfo.titleImage">
+    <img class="logo" src="{{ elementInfo.titleImage }}" alt="Login title image">
+  </md-card>
+
+  <md-card *ngIf="elementInfo.titleText">
+    <md-card-title>
+      {{ elementInfo.titleText }}
+    </md-card-title>
+  </md-card>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" >
+    <div *ngIf="databaseInfo.loginMode == 'emailAndPassword'">
+      <md-card>
+        <md-input-container class="w100p">
+          <input type="text"
+          formControlName="email"
+          mdInput placeholder="E-mail">
+        </md-input-container>
+
+        <md-error *ngIf="loginForm.controls.email.hasError('required') && loginForm.controls.email.touched">
+          Campo obrigatório
+        </md-error>
+
+        <md-error *ngIf="loginForm.controls.email.hasError('minlength') && loginForm.controls.email.touched">
+          Mínimo de 10 caracteres
+        </md-error>
+      </md-card>
+      
+      <md-card>
+        <md-input-container class="w100p">
+          <input type="password"
+          formControlName="password"
+          mdInput placeholder="Password">
+        </md-input-container>
+
+        <md-error *ngIf="loginForm.controls.password.hasError('required') && loginForm.controls.password.touched">
+          Campo obrigatório
+        </md-error>
+
+        <md-error *ngIf="loginForm.controls.password.hasError('minlength') && loginForm.controls.password.touched">
+          Mínimo de 10 caracteres
+        </md-error>
+      </md-card>
+      
+      <md-card>
+        <md-card-actions>
+          <button type="submit" md-raised-button color="primary" (click)="onSubmit()" [disabled]="!loginForm.valid">Login</button>
+        </md-card-actions>
+      </md-card>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="error.length > 0">
+  <md-error>
+    Checar requisitos para o components login ({{ error }})
+  </md-error>
+</div>
+>>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99

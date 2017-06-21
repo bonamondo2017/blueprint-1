@@ -2,6 +2,7 @@ hr {
   border: 1px solid #757575;
 }
 
+<<<<<<< HEAD
 md-input-container {
   font-size: 20px;
   text-decoration: bolder;
@@ -20,6 +21,15 @@ md-input-container {
     /*background-image: url('/assets/img/background-loggedout.jpg');*/
     background-size: cover;
     background-color: #404040;
+=======
+md-card-title {
+  min-height: 70px;
+}
+
+md-card-actions>button {
+  left: 35%;
+  width: 30%;
+>>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
 }
 
 .content {
@@ -31,6 +41,7 @@ md-input-container {
   opacity: 1;
 }
 
+<<<<<<< HEAD
 md-card .content {
   margin: 0;
   padding: 0;
@@ -41,11 +52,18 @@ md-card .content {
     top: 0;
     margin-left: auto;
     margin-right: auto;
+=======
+.logo {
+    position: absolute;
+    top: 0;
+    margin: 10px auto 10px auto;
+>>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
     left: 0;
     right: 0;
     height: 111px;
 }
 
+<<<<<<< HEAD
 .main-title {
   margin: 0;
   padding: 0;
@@ -67,10 +85,13 @@ md-card .content {
   background: #757575;
 }
 
+=======
+>>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
 #forgot-password {
   margin-top: 10px;
 }
 
+<<<<<<< HEAD
 #form {
   position: absolute;
   top: 167px;
@@ -80,6 +101,8 @@ md-card .content {
   right: 0;
   text-align: center;
 }
+=======
+>>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
 
 #msg {
     position: absolute;
@@ -107,4 +130,12 @@ md-card .content {
   text-decoration: bolder;
   font-weight: bolder;
   font-size: 20px;
+<<<<<<< HEAD
+=======
+}
+
+#title-image {
+  background: #CE93D8;
+  min-height: 70px;
+>>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
 }
