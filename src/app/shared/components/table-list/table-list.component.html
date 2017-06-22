@@ -2,11 +2,21 @@
   <md-card>
     <md-toolbar>
       <div id="toolbar-title">{{toolbar.title}}</div> 
+      
       <div id="toolbar-spacer"></div>
+
       <div id="toolbar-action">
-        <md-icon *ngIf="toolbar.delete && checked">delete</md-icon>
-        <md-icon *ngIf="toolbar.search">search</md-icon>
-        <md-icon *ngIf="toolbar.more">more_vert</md-icon>
+        <form [formGroup]="searchForm">
+          <md-icon *ngIf="toolbar.delete && checked">delete</md-icon>
+
+          <md-icon *ngIf="toolbar.search" (click)="toggleSearchInput()">search</md-icon>
+
+          <md-input-container *ngIf="searchInput">
+            <input type="text" mdInput placeholder="Pesquisar" formControlName="search" (keyup)="search()">
+          </md-input-container>
+
+          <md-icon *ngIf="toolbar.more">more_vert</md-icon>
+        </form>
       </div>
     </md-toolbar>
     

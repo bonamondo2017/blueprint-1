@@ -28,7 +28,7 @@ export class FormMultipleAutocompleteComponent implements OnInit {
         case 'firebase':
           if(this.arraySource.child) {
             if(this.arraySource.childKeys) {
-              this.crud.readArray({ 
+              this.crud.readArray('firebase', {
                 child: this.arraySource.child,
                 keys: this.arraySource.childKeys
               })

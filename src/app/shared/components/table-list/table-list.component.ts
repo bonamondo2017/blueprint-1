@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, OnChanges } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 /*Serices*/
 import { CrudService } from './../../services/crud.service';
@@ -22,6 +23,8 @@ export class TableListComponent implements OnChanges, OnInit{
   msg: string;
   rows: any = [];
   pages: any = [];
+  searchForm: FormGroup;
+  searchInput: boolean = false;
   selectedPageValue: number;
   selectedRowValue: number;
   testingThisShit: any;
@@ -32,6 +35,10 @@ export class TableListComponent implements OnChanges, OnInit{
     this.selectedPageValue = 1;
     this.selectedRowValue = 1;
     this.rows = [1, 5, 10, 15, 20, 50, 100, 150, 200];
+
+    this.searchForm = new FormGroup({
+      'search': new FormControl(null)
+    })
   }
 
   ngOnChanges() {
@@ -40,7 +47,7 @@ export class TableListComponent implements OnChanges, OnInit{
         case 'firebase':
           if(this.list.child) {
             if(this.list.childKeys) {
-              this.crud.readArray({ 
+              this.crud.readArray('firebase', { 
                 child: this.list.child,
                 keys: this.list.childKeys
               })
@@ -139,6 +146,44 @@ export class TableListComponent implements OnChanges, OnInit{
     })
     
     this.arraySourceFinal = filter; 
+  }
+
+  search = () => {
+    //console.log(this.arraySource);
+    let count;
+    let data = this.arraySource;
+    let filter = this.searchForm.controls.search.value;
+    filter.toString();
+    let string;
+
+    for(let lim = data.length, i = 0; i < lim; i ++) {
+      data[i].__checked = false;
+    }
+
+    this.list.childKeys.push('__checked');
+
+    let arrayExploded = data.map((data) => {
+      for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
+        string = data[this.list.childKeys[i]].toString();
+        count = string.search(filter);
+
+        console.log(count);
+      }
+    })
+
+   /*arrayToFilter.filter(array => {
+      for(let lim = array.length, i =0; i < lim; i++) {
+        string = array[i].toString();
+        console.log(string);
+        if(string.search(filter)) {
+          console.log(array[i]);
+        }
+      }
+    });*/
+  }
+
+  toggleSearchInput = () => {
+    this.searchInput = !this.searchInput;
   }
 }
 

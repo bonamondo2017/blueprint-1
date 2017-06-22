@@ -1,4 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MdDialog, MdDialogClose, MdSnackBar } from '@angular/material';
+import { Router } from '@angular/router';
+
+/*Components*/
+import { ForgotPasswordComponent } from './../../shared/components/forgot-password/forgot-password.component';
+
+/*Services*/
+import { AuthenticationService } from './../../shared/services/authentication.service';
 
 @Component({
   selector: 'app-login',
@@ -6,8 +15,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-<<<<<<< HEAD
-=======
+
   currentUser: any;
   databaseInfo: any;
   msg;
@@ -25,11 +33,4 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() { }
->>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }

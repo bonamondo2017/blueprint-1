@@ -21,39 +21,49 @@ export class AuthenticationService {
   
   constructor(private http: Http) { }
   
-  login = (source, login, password) => new Promise((resolve, reject) => {
+  login = (source, params) => new Promise((resolve, reject) => {
     switch(source) {
       case 'firebase':
-        fbAuth.signInWithEmailAndPassword(login, password)
-        .then(res => {
-          if(fbAuth.currentUser.emailVerified) {
-            let email = fbAuth.currentUser.email;
-            let uid = fbAuth.currentUser.uid;
+        let login = params.login;
+        let password = params.password;
+        
+        switch(params.loginMode) {
+          case 'emailAndPassword':
+            fbAuth.signInWithEmailAndPassword(login, password)
+            .then(res => {
+              if(fbAuth.currentUser.emailVerified) {
+                let email = fbAuth.currentUser.email;
+                let uid = fbAuth.currentUser.uid;
 
-            let that = this;
-            fbDatabase.ref('/users/' + uid)
-            .once('value')
-            .then(function(snapshot) {
-              that.name = snapshot.val().username;
-            });
-            
-            resolve({
-              cod: "l-01",
-              message: "Login successful"
-            });
-          } else {
-            resolve({
-              cod: "l-02",
-              message: "Authentication not validated."
+                let that = this;
+                fbDatabase.ref('/users/' + uid)
+                .once('value')
+                .then(function(snapshot) {
+                  that.name = snapshot.val().username;
+                });
+                
+                resolve({
+                  cod: "l-01",
+                  message: "Login successful"
+                });
+              } else {
+                resolve({
+                  cod: "l-02",
+                  message: "Authentication not validated."
+                })
+              }
             })
-          }
-        })
-        .catch(rej => {
-          reject({
-            cod: "l-03",
-            message: rej
-          })
-        })
+            .catch(rej => {
+              reject({
+                cod: "l-03",
+                message: rej
+              })
+            })
+          break;
+
+          default:
+            console.log("Escolher loginMode")
+        }
       break;
 
       case 'laravel':

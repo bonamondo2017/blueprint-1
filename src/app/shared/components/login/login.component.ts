@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MdDialog, MdDialogClose, MdSnackBar } from '@angular/material';
 import { Router } from '@angular/router';
@@ -10,75 +9,28 @@ import { ForgotPasswordComponent } from './../forgot-password/forgot-password.co
 /*Services*/
 import { AuthenticationService } from './../../services/authentication.service';
 
-@Component({
-  selector: 'bonamondo-login',
-=======
-import { Component, OnInit, Inject, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MdDialog, MdDialogClose } from '@angular/material';
-
 /*Validators*/
 import { MyValidators } from './../../validators/my-validators';
 
 @Component({
-  selector: 'login',
->>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
+  selector: 'bonamondo-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-<<<<<<< HEAD
-  currentUser: any;
-  msg;
-
-  constructor(
-    private authentication: AuthenticationService, 
-    public dialog: MdDialog,
-    public snackBar: MdSnackBar,
-    private router: Router
-  ) { }
-
-  ngOnInit() { }
-
-  login = (email, password) => {
-    this.authentication.login('firebase', email, password)
-    .then(res => {
-      this.msg = res;
-
-      this.snackBar.open(this.msg.message, '', {
-        duration: 2000,
-      });
-      
-
-      if(this.msg.cod == "l-01") {
-        window.location.href = '/home';
-      }
-    })
-    .catch(rej => {
-      this.msg = rej;
-
-      this.snackBar.open(this.msg.message, '', {
-        duration: 3000,
-      });
-    })
-  }
-
-  forgotPassword = () => {
-    let dialogRef = this.dialog.open(
-      ForgotPasswordComponent
-    );
-    
-    dialogRef.afterClosed().subscribe(() => {
-    });
-  }
-=======
   @Input() elementInfo;
   @Input() databaseInfo;
 
   error: any = [];
   loginForm: FormGroup;
+  msg: any;
   
-  constructor() {
+  constructor(
+    private authentication: AuthenticationService, 
+    public dialog: MdDialog,
+    public snackBar: MdSnackBar,
+    private router: Router
+  ) {
     this.loginForm = new FormGroup({
       'email': new FormControl('', [Validators.required]),
       'password': new FormControl('', Validators.required)
@@ -103,5 +55,29 @@ export class LoginComponent implements OnInit {
     }
   }
 
->>>>>>> 085ac94f2ead1a8f49974abe0a17909ae2d83a99
+  onSubmit = () => {
+    let email = this.loginForm.controls.email.value;
+    let password = this.loginForm.controls.password.value;
+    
+    this.authentication.login(this.databaseInfo.source, { login: email, password: password, loginMode: this.databaseInfo.loginMode })
+    .then(res => {
+      this.msg = res;
+
+      this.snackBar.open(this.msg.message, '', {
+        duration: 2000,
+      });
+      
+
+      if(this.msg.cod == "l-01") {
+        window.location.href = '/home';
+      }
+    })
+    .catch(rej => {
+      this.msg = rej;
+
+      this.snackBar.open(this.msg.message, '', {
+        duration: 3000,
+      });
+    })
+  }
 }

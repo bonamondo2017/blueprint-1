@@ -33,7 +33,7 @@ export class ListComponent implements OnInit {
       edit: true
     };*/
 
-    this.crud.readArray(this.crudParams)
+    this.crud.readArray('firebase', this.crudParams)
     .then(res => {
       this.list = {
         source: 'array',
