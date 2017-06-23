@@ -82,7 +82,7 @@ export class AuthenticationService {
         .post(
           this.url,
           {
-            "client_secret": "HNqY94tgnGEqY3WxcAhXmzY3pJQ0fkcYhtu6JBlA",
+            "client_secret": "wzxx5JuaQEo546KOAVzLfY9FAJYWUjYtPWpWTFqW",
             "client_id": 2,
             "grant_type": "password",
             "username": login,

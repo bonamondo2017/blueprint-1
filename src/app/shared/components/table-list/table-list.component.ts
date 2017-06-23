@@ -16,8 +16,9 @@ export class TableListComponent implements OnChanges, OnInit{
   arrayHeader: any = [];
   arraySource: any = [];
   arraySourceFinal: any = [];
+  arraySourceSearch: any = [];
   checkAllController: boolean = false;
-  checkItem: any = [];
+  checkedItem: boolean = false;
   error: any = [];
   isLoadingList: boolean = true;
   msg: string;
@@ -102,24 +103,16 @@ export class TableListComponent implements OnChanges, OnInit{
   ngOnInit() { 
   }
 
-  checkCheckAllController = () => {
-    this.checkAllController = false;
+  checkAllToggle() {
+    this.checkAllController = !this.checkAllController;
   }
 
-  checkAllListItens = (checked) => {
-    if(checked) {
-      this.checkAllController = true;
-      for(let lim = this.arraySourceFinal.length, i = 0; i < lim; i++) {
-        this.arraySourceFinal[i][this.arraySourceFinal.length] = true;
-        console.log(this.arraySourceFinal[i][this.arraySourceFinal.length]);
-      }
+  checkItem = (e) => {
+    if(e.checked){
+      this.checkedItem = true;
+      console.log(this.checkedItem);
     } else {
-      for(let lim = this.arraySourceFinal.length, i = 0; i < lim; i++) {
-        this.arraySourceFinal[i][this.arraySourceFinal.length] = false;
-        console.log(this.arraySourceFinal[i][this.arraySourceFinal.length]);
-      }
-      /*this.checkAllController = false;
-      this.checkItem = false;*/
+      this.checkedItem = false;
     }
   }
   
@@ -130,12 +123,6 @@ export class TableListComponent implements OnChanges, OnInit{
     }
     //Set pages array - find a better place for it ending
     
-    for(let lim = data.length, i = 0; i < lim; i ++) {
-      data[i].__checked = false;
-    }
-
-    this.list.childKeys.push('__checked');
-
     let filter = data.map((data) => {
       let temp = [];
       for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
@@ -144,46 +131,52 @@ export class TableListComponent implements OnChanges, OnInit{
       
       return temp;
     })
-    
+
     this.arraySourceFinal = filter; 
+    this.arraySourceSearch = filter; 
+    console.log(this.arraySourceSearch);
   }
 
   search = () => {
-    //console.log(this.arraySource);
+    let checkLoop = -1;
     let count;
-    let data = this.arraySource;
-    let filter = this.searchForm.controls.search.value;
-    filter.toString();
-    let string;
+    let data = this.arraySourceFinal;
+    let dataString;
+    let search;
+    let temp = [];
+    let test;
 
-    for(let lim = data.length, i = 0; i < lim; i ++) {
-      data[i].__checked = false;
+    if(this.searchForm.controls.search.value) {
+      search = this.searchForm.controls.search.value;
+    } else {
+      search = "";
     }
+    
+    for(let lim = data.length, i = 0; i < lim; i ++) {
+      for(let limj = (data[i].length), j = 0; j < limj; j++) {
+        dataString = data[i][j].toLowerCase();
+        count = dataString.search(search.toLowerCase());
+        
+        if(count !== -1) {
+          if(checkLoop != i) {
+            temp.push(data[i]);
+          }
 
-    this.list.childKeys.push('__checked');
-
-    let arrayExploded = data.map((data) => {
-      for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
-        string = data[this.list.childKeys[i]].toString();
-        count = string.search(filter);
-
-        console.log(count);
-      }
-    })
-
-   /*arrayToFilter.filter(array => {
-      for(let lim = array.length, i =0; i < lim; i++) {
-        string = array[i].toString();
-        console.log(string);
-        if(string.search(filter)) {
-          console.log(array[i]);
+          checkLoop = i;
         }
       }
-    });*/
+    }
+
+    this.arraySourceSearch = temp;   
   }
 
-  toggleSearchInput = () => {
+  searchInputToggle = () => {
     this.searchInput = !this.searchInput;
+    this.searchForm.reset();
+
+    if(!this.searchInput) {
+      this.search();
+    }
   }
 }
 

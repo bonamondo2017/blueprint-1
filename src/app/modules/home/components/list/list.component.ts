@@ -18,10 +18,16 @@ export class ListComponent implements OnInit {
   constructor(
     private crud: CrudService
   ) {
+    //Firebase
     this.crudParams = {
       child: 'people', 
       childKeys:['uid', 'name']  
     }
+
+    /*//Laravel
+    this.crudParams = {
+      route: 'users'
+    }*/
 
     /*
       //Eliminate crud service and everything envolved

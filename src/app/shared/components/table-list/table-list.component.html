@@ -1,3 +1,10 @@
+<h3 style="color:red">
+  Quando apertar checkbox de item de listagem, desmarcar o checkbox geral, caso esteja marcado.
+</h3>
+
+<h3 style="color:red">
+  Determinar item que servirá de :id na rora do edit. E pensar numa maneira de escolher se esse item aparece ou não na lista.
+</h3>
 <div *ngIf="error.length < 1">
   <md-card>
     <md-toolbar>
@@ -7,9 +14,9 @@
 
       <div id="toolbar-action">
         <form [formGroup]="searchForm">
-          <md-icon *ngIf="toolbar.delete && checked">delete</md-icon>
+          <md-icon *ngIf="toolbar.delete && (checkAllController || checkedItem)">delete</md-icon>
 
-          <md-icon *ngIf="toolbar.search" (click)="toggleSearchInput()">search</md-icon>
+          <md-icon *ngIf="toolbar.search" (click)="searchInputToggle()">search</md-icon>
 
           <md-input-container *ngIf="searchInput">
             <input type="text" mdInput placeholder="Pesquisar" formControlName="search" (keyup)="search()">
@@ -25,7 +32,7 @@
     <table *ngIf="!isLoadingList">
       <tr>
         <th id="list-item-checkbox" *ngIf="toolbar.delete">
-          <md-checkbox (change)="checkAllListItens($event.checked)" [checked]="checkAllController"></md-checkbox>
+          <md-checkbox [checked]="checkAllController" (change)="checkAllToggle()"></md-checkbox>
         </th>
 
         <th *ngFor="let header of arrayHeader">
@@ -36,13 +43,13 @@
         </th>
       </tr>
 
-      <tr class="list-item" *ngFor="let data of arraySourceFinal">
+      <tr class="list-item" *ngFor="let data of arraySourceSearch">
         <td *ngIf="toolbar.delete">
-          <md-checkbox class="list-item" [checked]="__last" (change)="checkCheckAllController($event.checked)"></md-checkbox>
+          <md-checkbox class="list-item" (change)="checkItem($event)" [checked]="checkAllController"></md-checkbox>
         </td>
 
-        <td *ngFor="let item of data; let __last = last;">
-          <span *ngIf="!__last">{{ item }}</span>
+        <td *ngFor="let item of data;">
+          <span>{{ item }}</span>
         </td>
 
         <td class="list-item-actions" *ngIf="list.edit">
