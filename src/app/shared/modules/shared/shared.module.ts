@@ -11,6 +11,8 @@ import { FormMultipleAutocompleteComponent } from './../../components/form-multi
 import { LoginComponent } from './../../components/login/login.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
 import { TableListComponent } from './../../components/table-list/table-list.component';
+import { UploadComponent } from './../../components/upload/upload.component';
+import { UploadDialogComponent } from './../../components/upload-dialog/upload-dialog.component';
 
 /*Directives*/
 import { FormMultipleselectAutocompleteDirective } from './../../directives/form-multipleselect-autocomplete.directive';
@@ -45,7 +47,9 @@ import { TextMaskModule } from 'angular2-text-mask';
     LoginComponent,
     PageNotFoundComponent,
     SearchByNamePipe,
-    TableListComponent
+    TableListComponent,
+    UploadComponent,
+    UploadDialogComponent
   ],
   exports: [
     MaterialModule,
@@ -56,7 +60,9 @@ import { TextMaskModule } from 'angular2-text-mask';
     LoginComponent,
     PageNotFoundComponent,
     SearchByNamePipe,
-    TableListComponent
+    TableListComponent,
+    UploadComponent,
+    UploadDialogComponent
   ],
   providers: [
     AuthenticationService,
@@ -65,7 +71,8 @@ import { TextMaskModule } from 'angular2-text-mask';
   ],
   entryComponents: [
     DeleteConfirmComponent,
-    ForgotPasswordComponent
+    ForgotPasswordComponent,
+    UploadDialogComponent
   ]
 })
 export class SharedModule { }

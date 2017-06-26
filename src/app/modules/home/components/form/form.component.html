@@ -38,23 +38,7 @@
     </md-card>
 
     <md-card>
-      <md-input-container class="w100p">
-        <input type="text" placeholder="Multiple Choices Autocomplete"
-        mdInput (keyup)="search($event.target.value, 'description')" #searchValue>
-      </md-input-container>
-
-      <md-card id="searchResult" *ngIf="searchList" class="w70p">
-        <div *ngFor="let searchAnswer of searchAnswers | searchByName:argToSearchPipe">
-          <a (click)="addSomeThing(searchAnswer)" (click)="searchValue.value=''">{{ searchAnswer?.description }}</a>
-          {{ searchAnswer?.notFound }}
-        </div>
-      </md-card>
-
-      <div>          
-        <span class="list-box" *ngFor="let thing of thingsRelated">
-          <a (click)="deleteSomeThing(thing.id)"> <md-icon>clear</md-icon> {{thing.description}} </a>
-        </span>
-      </div>
+      <bonamondo-upload [visual]="{text: 'Fazer upload', dialogText: 'Adicionar algo'}"></bonamondo-upload>
     </md-card>
 
     <md-card>
