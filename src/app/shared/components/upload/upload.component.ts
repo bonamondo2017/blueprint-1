@@ -24,10 +24,11 @@ export class UploadComponent implements OnInit {
       UploadDialogComponent,
       {
         data: {
-          dialogText: this.visual['dialogText']
+          dialogText: this.visual['dialogText'],
+          dragAndDropText: "Arraste o arquivo para cá"
         },
-        height: '90%',
-        width: '50%'
+        height: '380px',
+        width: '600px'
       }
       /*, 
       {

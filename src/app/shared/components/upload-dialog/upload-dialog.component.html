@@ -1,14 +1,19 @@
 <h1 md-dialog-title> {{ dialogText }} </h1>
 
-<md-dialog-content>
-  <form class="box" method="post" action="" enctype="multipart/form-data">
-    <div class="box__input">
-      <input class="box__file" type="file" name="files[]" id="file" data-multiple-caption="{count} files selected" multiple />
-      <label for="file"><strong>Choose a file</strong><span class="box__dragndrop"> or drag it here</span>.</label>
-      <button class="box__button" type="submit">Upload</button>
-    </div>
-    <div class="box__uploading">Uploading&hellip;</div>
-    <div class="box__success">Done!</div>
-    <div class="box__error">Error! <span></span>.</div>
-  </form>
+<md-dialog-content id="dragAndDropArea">
+  <div id="holder" (dragover)="setHolderClass(true)" (dragend)="setHolderClass(false)" (drop)="setOnDrop($event)" [class]="holder">
+    <p id="upload" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
+    <p id="filereader">File API & FileReader API not supported</p>
+    <p id="formdata">XHR2's FormData is not supported</p>
+    <p id="progress">XHR2's upload progress isn't supported</p>
+    <p>Upload progress: <progress id="uploadprogress" max="100" value="0">0</progress></p>
+    <p>Drag an image from your desktop on to the drop zone above to see the browser both render the preview, but also upload automatically to this server.</p>
+    <!--<span>{{ dragAndDropText }}</span>
+    <span>ou Escolha um arquivo de seu computador</span>-->
+  </div>
 </md-dialog-content>
+
+<md-dialog-actions>
+    <button md-button md-dialog-close color="warn" type="button">CANCEL</button>
+    <button md-button color="primary">UPLOAD</button>
+</md-dialog-actions>
