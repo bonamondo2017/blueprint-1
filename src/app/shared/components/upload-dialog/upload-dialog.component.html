@@ -1,15 +1,15 @@
 <h1 md-dialog-title> {{ dialogText }} </h1>
 
 <md-dialog-content id="dragAndDropArea">
-  <div id="holder" (dragover)="setHolderClass(true)" (dragend)="setHolderClass(false)" (drop)="setOnDrop($event)" [class]="holder">
-    <p id="upload" class="hidden"><label>Drag & drop not supported, but you can still upload via this input field:<br><input type="file"></label></p>
-    <p id="filereader">File API & FileReader API not supported</p>
-    <p id="formdata">XHR2's FormData is not supported</p>
-    <p id="progress">XHR2's upload progress isn't supported</p>
-    <p>Upload progress: <progress id="uploadprogress" max="100" value="0">0</progress></p>
-    <p>Drag an image from your desktop on to the drop zone above to see the browser both render the preview, but also upload automatically to this server.</p>
-    <!--<span>{{ dragAndDropText }}</span>
-    <span>ou Escolha um arquivo de seu computador</span>-->
+  <div class="uploads"></div>
+  <div [class]="class" (dragleave)="onDragLeave()" (dragover)="onDragOver($event)" (drop)="onDrop($event)" id="dropzone" *ngIf="uploadValue.length < 1">
+    {{ dragAndDropText }}
+  </div>
+
+  <div [class]="class" (dragleave)="onDragLeave()" (dragover)="onDragOver($event)" (drop)="onDrop($event)" id="dropzone" *ngIf="uploadValue.length > 0">
+    <div *ngFor="let value of uploadValue; let i = index" class="w100p">
+      <div class="w95p float-left"><md-icon class="md-18">{{ value.mdIcon }}</md-icon> {{ value.name }}</div> <div class="w5p float-left"><md-icon class="md-18" (click)="remove(i)">clear</md-icon></div>
+    </div>
   </div>
 </md-dialog-content>
 

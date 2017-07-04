@@ -1,29 +1,27 @@
-.box__dragndrop,
-.box__uploading,
-.box__success,
-.box__error {
-  display: none;
+.dropList {
+    width: 100%;
+    min-height: 200px;
+    border: 2px dashed #673ab7;
+    color: #000;
+    text-align: left;
 }
 
-.class { background: purple }
-.fail { background: #c00; padding: 2px; color: #fff; }
-.hidden { display: none !important;}
-
-#dragAndDropArea {
-    background: #E0E0E0;
-    height: 250px;
-    position: relative;
-}
-
-#dragAndDropAreaText { 
-    position: relative;
-    top: 120px;
+.dropzone {
+    width: 100%;
+    min-height: 200px;
+    border: 2px dashed #ccc;
+    color: #ccc;
+    line-height: 200px;
     text-align: center;
 }
 
-#holder { border: 10px dashed #ccc; width: 300px; min-height: 300px; margin: 20px auto;}
-#holder.hover { border: 10px dashed #0c0; }
-#holder img { display: block; margin: 10px auto; }
-#holder p { margin: 10px; font-size: 14px; }
-progress { width: 100%; }
-progress:after { content: '%'; }
+.dropzone.dragover {
+    border-color:#673ab7;
+    color: #673ab7;
+}
+
+.float-left {
+  float: left;
+}
+
+.w5p { width: 5%; } .w95p { width: 95%; } .w100p { width: 100%; }

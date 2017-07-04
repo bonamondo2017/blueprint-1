@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MdDialogRef } from '@angular/material';
 
 @Component({
@@ -7,36 +7,16 @@ import { MdDialogRef } from '@angular/material';
   styleUrls: ['./upload-dialog.component.css']
 })
 export class UploadDialogComponent implements OnInit {
-  acceptedTypes = {
-    'image/png': true,
-    'image/jpeg': true,
-    'image/gif': true
-  };
+  @Output()
+  uploadEvent: EventEmitter<string> = new EventEmitter<string>();
+
+  class: string = "dropzone";
   data: any;
   dialogText: string;
   dragAndDropText: string;
-  fileupload = document.getElementById('upload');
-  holder: string;
-  holderId = document.getElementById('holder');
-  progress = document.getElementById('uploadprogress');
-  /*tests = {
-    filereader: typeof FileReader != 'undefined',
-    dnd: 'draggable' in document.createElement('span'),
-    formdata: !!window.FormData,
-    progress: "upload" in new XMLHttpRequest
-  }*/
-
-  support = {
-    filereader: document.getElementById('filereader'),
-    formdata: document.getElementById('formdata'),
-    progress: document.getElementById('progress')
-  };
-  tests = {
-    filereader: typeof FileReader != 'undefined',
-    formdata: true,
-    dnd: 'draggable' in document.createElement('span'),
-    progress: "upload" in new XMLHttpRequest
-  }
+  dragOver:boolean = false;
+  dropzone: any;
+  uploadValue: any = [];
   
   constructor(
     public dialogRef: MdDialogRef<any>
@@ -47,83 +27,48 @@ export class UploadDialogComponent implements OnInit {
   ngOnInit() {
     this.dialogText = this.data.dialogText;
     this.dragAndDropText = this.data.dragAndDropText;
+    this.dropzone = document.getElementById('dropzone');
+  }
 
-    if (this.tests.dnd) { 
-      
+  onDragLeave = () => {
+    this.class = 'dropzone';
+  }
+
+  onDragOver = (event) => {
+    event.preventDefault();
+    if(this.uploadValue.length < 1) {
+      this.class = 'dropzone dragover';
     } else {
-      this.fileupload.className = 'hidden';
-      this.fileupload.querySelector('input').onchange = function () {
-        //readfiles(this.files);
-      };
+      this.class = 'dropList';
     }
   }
 
-  previewfile = (file) => {
-    if (this.tests.filereader === true && this.acceptedTypes[file.type] === true) {
-      let reader = new FileReader();
-      let that = this;
-
-      reader.onload = function (event) {
-        console.log(event);
-        /*let image = new Image();
-        image.src = event.target.result;
-        image.width = 250; // a fake resize
-        that.holderId.appendChild(image);*/
-      };
-
-      reader.readAsDataURL(file);
-    }  else {
-      this.holderId.innerHTML += '<p>Uploaded ' + file.name + ' ' + (file.size ? (file.size/1024|0) + 'K' : '');
-      console.log(file);
-    }
+  onDrop = (event) => {
+    event.preventDefault();
+    this.class = 'dropList';
+    this.upload(event.dataTransfer.files);
   }
 
-  readfiles = (files) => {
-    debugger;
-    let formData = this.tests.formdata ? new FormData() : null;
-    for (let i = 0; i < files.length; i++) {
-      if (this.tests.formdata) formData.append('file', files[i]);
-      this.previewfile(files[i]);
-    }
+  remove = (index) => {
+    this.uploadValue.splice(index, 1);
 
-    // now post a new XHR request
-    if (this.tests.formdata) {
-      let that = this;
-      let xhr = new XMLHttpRequest();
+    console.log(this.uploadValue);
+  }
 
-      xhr.open('POST', '/devnull.php');
-      xhr.onload = function() {
-        //that.progress.value = that.progress.innerHTML = 100;
-      };
+  upload = (files) => {
+    let type;
 
-      if (this.tests.progress) {
-        xhr.upload.onprogress = function (event) {
-          if (event.lengthComputable) {
-            let complete = (event.loaded / event.total * 100 | 0);
-            //that.progress.value = that.progress.innerHTML = complete;
-          }
-        }
+    for(let lim = files.length, i = 0; i < lim; i++) {
+      type = files[i].type.split("/");
+      if(type[0] == "image") {
+        files[i]['mdIcon'] = "image";
+      } else {
+        files[i]['mdIcon'] = "attach_file";
       }
 
-      xhr.send(formData);
+      this.uploadValue.push(files[i])
     }
-  }
 
-  setHolderClass = (boolean) => {
-    if(boolean) {
-      this.holder = "holder";
-      console.log(this.holder);
-    } else {
-      this.holder = "";
-    }
-  }
-
-  setOnDrop = (event) => {
-    this.holder = "holder";
-
-    console.log(this.holder);
-    /*event.preventDefault();
-
-    this.readfiles(event.dataTransfer.files);*/
+    console.log(this.uploadValue);
   }
 }
