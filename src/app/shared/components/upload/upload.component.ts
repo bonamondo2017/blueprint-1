@@ -18,6 +18,10 @@ export class UploadComponent implements OnInit {
 
   ngOnInit() {
   }
+
+  onFileUploaded(data) {
+    console.log(data);
+  }
   
   upload = () => {
     let dialogRef = this.dialog.open(
@@ -30,15 +34,6 @@ export class UploadComponent implements OnInit {
         height: '380px',
         width: '600px'
       }
-      /*, 
-      {
-        data:
-        {
-          child: this.child, //somethingChild
-          idChildToDelete: value, //__key
-          childRelated: ['childRelated_0_productsGroup']
-        }
-      }*/
     );
   }
 }

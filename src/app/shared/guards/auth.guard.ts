@@ -20,11 +20,15 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean> | Promise<boolean> | boolean {
-    fbAuth.onAuthStateChanged((user) => {
-      if(!user) {
-        this.router.navigate(['/login']);
-      }
-    });
+    if(sessionStorage.access_token) {
+      
+    } else {
+      fbAuth.onAuthStateChanged((user) => {
+        if(!user) {
+          this.router.navigate(['/login']);
+        }
+      });
+    }
     
     return true;
   }

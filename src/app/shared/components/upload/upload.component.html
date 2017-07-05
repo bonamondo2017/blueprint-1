@@ -1,4 +1,4 @@
-<button md-raised-button color="primary" (click)="upload()">
+<button md-raised-button color="primary" (click)="upload()" (fileUploaded)="onFileUploaded($event)">
   <md-icon class="md-18">add</md-icon>
   {{ visual.text }}
 </button>

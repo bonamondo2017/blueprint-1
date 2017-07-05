@@ -738,6 +738,189 @@ export class CrudService {
         console.log("Faltando source");
     }
   })
+
+  upload = (source, params) => new Promise((resolve, reject) => {
+    switch(source) {
+      case 'firebase':
+        let arr: any;
+        let check: any;
+        let countChildIteration: number; //Para ver se é a primeira iteração da child e definir se a acão será push ou update
+        let keyToUpdate: any;//APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
+        let lastKey: any;
+        let lastSubchild: any;
+        let obj: any;
+        let objectFromSpecificKey: any;
+        let ref: any;
+        let ref2: any;
+        let setKey: boolean;
+        
+        if(params.child.length < 1 || params.child == undefined) { // Verifica se pelo menos uma child foi definida
+          reject({
+            cod: "c-01",
+            message: "Informar erro c-01 ao administrador"
+          });
+        }
+        
+        for(let i = 0; i < params.child.length; i++) { //Ryzzan: child to create i
+          check = null;
+          countChildIteration = 0;
+          //obj = {}; //VOLTAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
+          objectFromSpecificKey = {};
+          ref = fbDatabase.ref(params.child[i]); // Referencia a child onde será inserido o registro
+          setKey = true; // Variável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
+
+          for (let k in params.objectToPush){ // Loop que varre todos os campos do formulário
+            obj = {}; //APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
+            if(params.objectToPush.hasOwnProperty(k)) {
+              check = k.split('_'); // Divide a 'tag' de cada formControl (campos do form) criando um array. Ex.: ['field', '0', 'name']
+              if(check[1] == i) { // Verifica se a iteração do formControl (campos do form) corresponde a iteração do loop
+                if(check[0] === "field") { // Verifica se o formControl está configurado como um campo simples
+                  if(params.objectToPush[k] != undefined) {
+                    obj[check[2]] = params.objectToPush[k]; // Insere na variável obj o nome do campo e seu valor
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                    if(countChildIteration < 1) {
+                      if(setKey) { // Verifica se é a chave principal ou a sub-child
+                        let key = ref.push(obj).key; // Cria a chave principal
+                        
+                        lastKey = {
+                          key: key, // Retorna a key do objeto recém criado
+                          child: params.child[i] // Retorna o nome da child principal
+                        }
+
+                        keyToUpdate = key;
+                      } else {
+                        let key = ref.push(obj).key;
+                        keyToUpdate = key;
+                      }
+                    } else {
+                      ref2 = fbDatabase.ref(params.child[i]+"/"+keyToUpdate);
+                      ref2.update(obj);
+                    }
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
+                  }
+                }
+                
+                if(check[0] === "updateFromSpecificKey") { // Identifica o campo como um array de valores dentro da uma child recém criada
+                  if(params.objectToPush[k] != undefined || params.objectToPush[k] != ""){
+                    if(Array.isArray(params.objectToPush[k]))
+                      arr = params.objectToPush[k]; // Cria um array com todos os elementos que serão inseridos dentro da child recém criada
+                    else
+                      arr = params.objectToPush[k].split(";");
+                    for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém criada
+                      ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(params.child[i]); // Referencia a sub-child onde será inserido o registro
+                      objectFromSpecificKey[arr[j].__key] = arr[j]; // Inseri na variável objectFromSpecificKey todos os elementos com valor true
+                      ref2.update(objectFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
+                    }
+                  }
+                  setKey = false; // Identifica a existência de uma sub-child (child dentro de child)
+                }
+
+                /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela início*/
+                if(check[0] === "subchild") { //Flag para a subchild por vir
+                  if(params.objectToPush[k] != undefined) {
+                    lastSubchild = check[2];
+                  }
+                }
+
+                if(check[0] === "subchildPropertyAndValue") { //Mordendo a língua sobre a crítica a respeito dos métodos Java
+                  if(params.objectToPush[k] != "" && params.objectToPush[k] != null && params.objectToPush[k] != undefined && lastSubchild != undefined) {
+                    obj[check[2]] = params.objectToPush[k];
+
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                    if(countChildIteration < 1) {
+                      if(setKey) { // Verifica se é a chave principal ou a sub-child
+                        ref2 = fbDatabase.ref(params.child[i]+"/"+lastSubchild);
+                        let key = ref2.push(obj).key; // Cria a chave principal
+                        
+                        lastKey = {
+                          key: key, // Retorna a key do objeto recém criado
+                          child: params.child[i] // Retorna o nome da child principal
+                        }
+
+                        keyToUpdate = key;
+                      } else {
+                        let key = ref.push(obj).key;
+                        keyToUpdate = key;
+                      }
+                    } else {
+                      ref2 = fbDatabase.ref(params.child[i]+"/"+keyToUpdate).child(lastSubchild);
+                      ref2.update(obj);
+                    }
+                    /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
+                  }
+                }
+
+                /* Adicionando subchild na child da iteração atual parar inserir propriedade(s) e valor(es) nela fim*/
+                
+                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
+                if(check[0] != "subchild" && (countChildIteration == 0 && params.objectToPush[k] != undefined)) { //Preocupação em não faze o count caso newSubChild seja o primeiro elemento do form
+                  countChildIteration ++;
+                }
+                /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
+              }
+            }
+          }
+
+          /*VOLTAR NO CASO DE RESOLVER MELHORA DA PERFORMANCE INÍCIO*/
+          /*if(setKey) { // Verifica se é a chave principal ou a sub-child
+            let key = ref.push(obj).key; // Cria a chave principal
+            
+            lastKey = {
+              key: key, // Retorna a key do objeto recém criado
+              child: child[i] // Retorna o nome da child principal
+            }
+          } else {
+            ref.push(obj);
+          }*/
+        /*VOLTAR NO CASO DE RESOLVER MELHORA DA PERFORMANCE FIM*/
+        }
+
+        resolve({
+          cod: "c-02",
+          message: "Cadastro feito com sucesso"//Cadastro feito com sucesso
+        });
+      break;
+      
+      case 'laravel':
+        let apiUrl: string = this.url;
+        let objectToCreate: any = params.objectToCreate;
+        let route: string = params.route;
+        
+        if(!route) { // Verifica se pelo menos uma child foi definida
+          reject({
+            cod: "c-01",
+            message: "Informar erro c-01 ao administrador"
+          });
+        }
+
+        this.headersToAuth = new Headers({
+          'Content-Type': 'multipart/form-data',
+          'Accept': 'application/json',
+          'Authorization': sessionStorage.getItem('access_token'),
+          'Access-Control-Allow-Origin': '*'
+        });
+
+        this.optionsToAuth = new RequestOptions({
+          'headers': this.headersToAuth
+        })
+
+        this.http
+        .post(
+          apiUrl+route,
+          objectToCreate,
+          this.optionsToAuth
+        ).subscribe(res => {
+          resolve({
+            cod: "c-02",
+            message: "Upload feito com sucesso"//Cadastro feito com sucesso
+          });
+        })
+      break;
+
+      default:
+        console.log("Faltando source")
+    }
+  })
   
   delete = (child: any, idChildToDelete: any, childRelated: any, ...params) => new Promise((resolve, reject) => {
     let ref: any;

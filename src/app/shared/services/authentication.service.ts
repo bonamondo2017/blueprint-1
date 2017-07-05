@@ -67,6 +67,8 @@ export class AuthenticationService {
       break;
 
       case 'laravel':
+        login = params.login;
+        password = params.password;
         let temp;
 
         this.headersToAuth = new Headers({

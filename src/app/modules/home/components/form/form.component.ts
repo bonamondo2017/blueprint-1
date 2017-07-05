@@ -50,15 +50,10 @@ export class FormComponent implements OnInit {
     this.somethingChildForm = new FormGroup({
       'field_0_simpleInput': new FormControl('', [Validators.required, Validators.minLength(10)]),
       'field_0_simpleSelect': new FormControl('', Validators.required),
-      'field_0_multipleChoicesAutocomplete': new FormControl('', Validators.required)
+      'field_0_fileUpload': new FormControl(''),
+      'field_0_multipleChoicesAutocomplete': new FormControl('')
     });
-
-    this.thingsToSelect = [
-      { id: 1, description: "Something" },
-      { id: 2, description: "Anything" },
-      { id: 3, description: "Nothing" }
-    ];
-
+    
     this.thingsRelated = [];
   }
 
@@ -68,12 +63,13 @@ export class FormComponent implements OnInit {
   
   create = () => {
     this.somethingChildObject = this.somethingChildForm.value;
-    if(this.somethingChildForm.valid){ // Verifica se o FormGroup é válido
+    console.log(this.somethingChildObject);
+    /*if(this.somethingChildForm.valid){ // Verifica se o FormGroup é válido
       this.crud.create('firebase', {child: this.child, objectToPush: this.somethingChildObject}); // cadastra o product Class no banco
       this.somethingChild = undefined;
       this.readSomethingsChild(); // Traz os producs Classs cadastrado no banco incluindo o que acabou de ser criado
       this.somethingChildForm.reset(); // Apaga as informações no form
-    }
+    }*/
   }
   
   delete = (value) => {

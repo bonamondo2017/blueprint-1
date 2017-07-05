@@ -1,5 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Http, Headers, RequestOptions } from '@angular/http';
 import { MdDialogRef } from '@angular/material';
+
+/*Serices*/
+import { CrudService } from './../../services/crud.service';
 
 @Component({
   selector: 'app-upload-dialog',
@@ -8,7 +12,7 @@ import { MdDialogRef } from '@angular/material';
 })
 export class UploadDialogComponent implements OnInit {
   @Output()
-  uploadEvent: EventEmitter<string> = new EventEmitter<string>();
+  fileUploaded: EventEmitter<any> = new EventEmitter<any>();
 
   class: string = "dropzone";
   data: any;
@@ -19,7 +23,9 @@ export class UploadDialogComponent implements OnInit {
   uploadValue: any = [];
   
   constructor(
-    public dialogRef: MdDialogRef<any>
+    private crud: CrudService,
+    public dialogRef: MdDialogRef<any>,
+    private http: Http
   ) {
     this.data = this.dialogRef._containerInstance.dialogConfig.data;
   }
@@ -51,14 +57,15 @@ export class UploadDialogComponent implements OnInit {
 
   remove = (index) => {
     this.uploadValue.splice(index, 1);
-
-    console.log(this.uploadValue);
   }
 
   upload = (files) => {
-    let type;
+    console.log(files);
+    let formData:FormData = new FormData(),
+        file: File = files[0],
+        type;
 
-    for(let lim = files.length, i = 0; i < lim; i++) {
+    /*for(let lim = files.length, i = 0; i < lim; i++) {
       type = files[i].type.split("/");
       if(type[0] == "image") {
         files[i]['mdIcon'] = "image";
@@ -66,9 +73,14 @@ export class UploadDialogComponent implements OnInit {
         files[i]['mdIcon'] = "attach_file";
       }
 
-      this.uploadValue.push(files[i])
-    }
+      
 
-    console.log(this.uploadValue);
+      this.uploadValue.push(files[i])
+    }*/
+
+    formData.append('file', file, file.name);
+    console.log(formData);
+    this.crud.upload('laravel', {route: 'medias', objectToCreate: formData});
+    console.log(formData['getAll']('file'));
   }
 }
