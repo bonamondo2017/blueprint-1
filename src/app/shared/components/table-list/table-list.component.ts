@@ -122,8 +122,8 @@ export class TableListComponent implements OnChanges, OnInit{
       this.pages[i] = i+1;
     }
     //Set pages array - find a better place for it ending
-    
-    let filter = data.map((data) => {
+
+    let filter = data.objFiltered.map((data) => {
       let temp = [];
       for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
         temp.push(data[this.list.childKeys[i]]);
@@ -133,8 +133,7 @@ export class TableListComponent implements OnChanges, OnInit{
     })
 
     this.arraySourceFinal = filter; 
-    this.arraySourceSearch = filter; 
-    console.log(this.arraySourceSearch);
+    this.arraySourceSearch = filter;
   }
 
   search = () => {

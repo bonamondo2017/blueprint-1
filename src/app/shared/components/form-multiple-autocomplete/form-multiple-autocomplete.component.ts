@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 
 /*Serices*/
 import { CrudService } from './../../services/crud.service';
@@ -8,7 +8,7 @@ import { CrudService } from './../../services/crud.service';
   templateUrl: './form-multiple-autocomplete.component.html',
   styleUrls: ['./form-multiple-autocomplete.component.css']
 })
-export class FormMultipleAutocompleteComponent implements OnInit {
+export class FormMultipleAutocompleteComponent implements OnChanges, OnInit {
   @Input() arraySource: any;
   @Input() class: string;
 
@@ -19,10 +19,9 @@ export class FormMultipleAutocompleteComponent implements OnInit {
   constructor(
     private crud: CrudService
   ) {
-    
   }
 
-  ngOnInit() {
+  ngOnChanges() {
     if(this.arraySource) {
       switch(this.arraySource.source) {
         case 'firebase':
@@ -34,7 +33,8 @@ export class FormMultipleAutocompleteComponent implements OnInit {
               })
               .then(res => {
                 this.array = res;
-                this.filterArrayKey(this.array);
+                this.arraySourceFinal = res;
+                //this.filterArrayKey(this.array);
               });           
             
             } else {
@@ -45,19 +45,47 @@ export class FormMultipleAutocompleteComponent implements OnInit {
           }
         break;
 
-        case 'arrayInComponent':
+        case 'array':
+          if(this.arraySource.array) {
+            this.array = this.arraySource.array;
+            
+            let filter = this.array.obj.map(data => {
+              let keys = Object.keys(data);
+              let temp = [];
+              console.log(keys.length);
+              for(let lim = keys.length, i = 0; i < lim; i++) {
+                console.log(data.keys[i]);
+              }
+              console.log(temp);
+              return temp;
+            })
+            console.log(filter);
+            //this.arraySourceFinal = filter;
+            //this.filterArrayKey(this.array);
+          } else {
+            this.error = ['arraySource.array']
+          }
         break;
 
         default:
           this.error = ['arraySource.source'] ;
       }
     } else {
-      this.error = ['arraySource']
+      setTimeout(() => {
+        if(this.arraySource == undefined) {
+          this.error = ['arraySource', 'time exceeded'];
+        }
+      }, 20000)
     }
   }
 
-  filterArrayKey(data){
-    let filter = data.map((data) => {
+  ngOnInit() {
+    
+  }
+
+  /*filterArrayKey(data){
+    console.log(data.objFiltered[0]);
+    let filter = data.objFiltered.map((data) => {
       let temp = [];
       for(let lim = this.arraySource.childKeys.length, i = 0; i < lim; i++){
         temp.push(data[this.arraySource.childKeys[i]]);
@@ -66,5 +94,5 @@ export class FormMultipleAutocompleteComponent implements OnInit {
     })
 
     this.arraySourceFinal = filter; 
-  }
+  }*/
 }

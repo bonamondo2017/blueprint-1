@@ -18,20 +18,19 @@ export class ListComponent implements OnInit {
   constructor(
     private crud: CrudService
   ) {
-    //Firebase
+    /*//Firebase
     this.crudParams = {
       child: 'people', 
       childKeys:['uid', 'name']  
-    }
-
-    /*//Laravel
-    this.crudParams = {
-      route: 'users'
     }*/
 
-    /*
-      //Eliminate crud service and everything envolved
-      this.list = {
+    //Laravel
+    this.crudParams = {
+      route: 'users'
+    }
+
+    /*//Eliminate crud service and everything envolved
+    this.list = {
       source: 'firebase', 
       child: 'people', 
       childKeys:['uid', 'name'],
@@ -39,7 +38,7 @@ export class ListComponent implements OnInit {
       edit: true
     };*/
 
-    this.crud.readArray('firebase', this.crudParams)
+    this.crud.readArray('laravel', this.crudParams)
     .then(res => {
       this.list = {
         source: 'array',

@@ -60,26 +60,22 @@ export class UploadDialogComponent implements OnInit {
   }
 
   upload = (files) => {
-    console.log(files);
     let formData:FormData = new FormData(),
-        file: File = files[0],
+        file: File = files,
         type;
 
-    /*for(let lim = files.length, i = 0; i < lim; i++) {
+    for(let lim = files.length, i = 0; i < lim; i++) {
       type = files[i].type.split("/");
       if(type[0] == "image") {
         files[i]['mdIcon'] = "image";
       } else {
         files[i]['mdIcon'] = "attach_file";
       }
-
-      
+      formData.append('file', files[i]);  
 
       this.uploadValue.push(files[i])
-    }*/
-
-    formData.append('file', file, file.name);
-    console.log(formData);
+    }
+    
     this.crud.upload('laravel', {route: 'medias', objectToCreate: formData});
     console.log(formData['getAll']('file'));
   }

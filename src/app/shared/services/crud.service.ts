@@ -26,6 +26,8 @@ export class CrudService {
     Pensar
   */
   create = (source, params) => new Promise((resolve, reject) => {
+    let route: string = params.route;
+    
     switch(source) {
       case 'firebase':
         let arr: any;
@@ -40,19 +42,19 @@ export class CrudService {
         let ref2: any;
         let setKey: boolean;
         
-        if(params.child.length < 1 || params.child == undefined) { // Verifica se pelo menos uma child foi definida
+        if(route.length < 1 || route == undefined) { // Verifica se pelo menos uma child foi definida
           reject({
             cod: "c-01",
             message: "Informar erro c-01 ao administrador"
           });
         }
         
-        for(let i = 0; i < params.child.length; i++) { //Ryzzan: child to create i
+        for(let i = 0; i < route.length; i++) { //Ryzzan: child to create i
           check = null;
           countChildIteration = 0;
           //obj = {}; //VOLTAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE
           objectFromSpecificKey = {};
-          ref = fbDatabase.ref(params.child[i]); // Referencia a child onde será inserido o registro
+          ref = fbDatabase.ref(route[i]); // Referencia a child onde será inserido o registro
           setKey = true; // Variável boleana responsável por identicar a existência ou não de uma sub-child (child dentro de child)
 
           for (let k in params.objectToPush){ // Loop que varre todos os campos do formulário
@@ -70,7 +72,7 @@ export class CrudService {
                         
                         lastKey = {
                           key: key, // Retorna a key do objeto recém criado
-                          child: params.child[i] // Retorna o nome da child principal
+                          child: route[i] // Retorna o nome da child principal
                         }
 
                         keyToUpdate = key;
@@ -79,7 +81,7 @@ export class CrudService {
                         keyToUpdate = key;
                       }
                     } else {
-                      ref2 = fbDatabase.ref(params.child[i]+"/"+keyToUpdate);
+                      ref2 = fbDatabase.ref(route[i]+"/"+keyToUpdate);
                       ref2.update(obj);
                     }
                     /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
@@ -93,7 +95,7 @@ export class CrudService {
                     else
                       arr = params.objectToPush[k].split(";");
                     for(let j = 0; j < arr.length; j++) { // Loop que varre todos os elementos que serão inseridos dentro da child recém criada
-                      ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(params.child[i]); // Referencia a sub-child onde será inserido o registro
+                      ref2 = fbDatabase.ref(lastKey.child+"/"+lastKey.key).child(route[i]); // Referencia a sub-child onde será inserido o registro
                       objectFromSpecificKey[arr[j].__key] = arr[j]; // Inseri na variável objectFromSpecificKey todos os elementos com valor true
                       ref2.update(objectFromSpecificKey); // Cria a sub-child com cada elemento dentro da child principal
                     }
@@ -115,12 +117,12 @@ export class CrudService {
                     /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE INICIO*/
                     if(countChildIteration < 1) {
                       if(setKey) { // Verifica se é a chave principal ou a sub-child
-                        ref2 = fbDatabase.ref(params.child[i]+"/"+lastSubchild);
+                        ref2 = fbDatabase.ref(route[i]+"/"+lastSubchild);
                         let key = ref2.push(obj).key; // Cria a chave principal
                         
                         lastKey = {
                           key: key, // Retorna a key do objeto recém criado
-                          child: params.child[i] // Retorna o nome da child principal
+                          child: route[i] // Retorna o nome da child principal
                         }
 
                         keyToUpdate = key;
@@ -129,7 +131,7 @@ export class CrudService {
                         keyToUpdate = key;
                       }
                     } else {
-                      ref2 = fbDatabase.ref(params.child[i]+"/"+keyToUpdate).child(lastSubchild);
+                      ref2 = fbDatabase.ref(route[i]+"/"+keyToUpdate).child(lastSubchild);
                       ref2.update(obj);
                     }
                     /*APAGAR NO CASO DE RESOLVER A SITUAÇÃO DE MELHORA DA PERFORMANCE FIM*/
@@ -168,9 +170,7 @@ export class CrudService {
       break;
       
       case 'laravel':
-        let apiUrl: string = this.url;
         let objectToCreate: any = params.objectToCreate;
-        let route: string = params.route;
         
         if(!route) { // Verifica se pelo menos uma child foi definida
           reject({
@@ -190,7 +190,7 @@ export class CrudService {
 
         this.http
         .post(
-          apiUrl+route,
+          this.url+route,
           objectToCreate,
           this.optionsToAuth
         ).subscribe(res => {
@@ -207,17 +207,13 @@ export class CrudService {
   })
 
   readArray = (source, params) => new Promise((resolve, reject) => {
+    let hide: any = params.hide;
+    var route: string = params.route;
+    let show: any = params.show;
+    
     switch(source) {
-      case 'firebase':
-        /*
-        RYZZAN
-        child: child,
-        attributes: [childs.attributes],
-        filters:[[orderByChild1][equalTo]],
-        limit: [start, finish] //if only one array is set, set start as 1 and the only set value will be finish
-        */
-        let child;
-        let orderByChild;
+      case 'firebase':  
+        let orderByChild = params.orderByChild;
         let equalTo;
 
         let ref;
@@ -234,14 +230,14 @@ export class CrudService {
           });
         }
 
-        if(!params.child) {
+        if(route) {
           reject({
             cod: "ra-02",
             message: "Informar erro ra-02 ao administrador"//É preciso declarar ao menos um child"
           });
         }
         
-        if(params.orderByChild) {
+        if(orderByChild) {
           if(!params.equalTo) {
             reject({
               cod: "ra-03",
@@ -253,9 +249,7 @@ export class CrudService {
           equalTo = params.equalTo;
         }
 
-        child = params.child;
-
-        ref = fbDatabase.ref(child);
+        ref = fbDatabase.ref(route);
         
         if(orderByChild) {
           ref
@@ -289,8 +283,9 @@ export class CrudService {
                   })*/
                   objFiltered.push(temp);
                 }
-                
-                resolve(objFiltered);
+
+                obj = objFiltered;
+                resolve(obj);
               } else {
                 resolve(obj);
               }
@@ -328,7 +323,8 @@ export class CrudService {
                   objFiltered.push(temp);
                 }
                 
-                resolve(objFiltered);
+                obj = objFiltered;
+                resolve(obj);
               } else {
                 resolve(obj);
               }
@@ -344,11 +340,10 @@ export class CrudService {
 
       case "laravel":
         let apiUrl: string = this.url;
-        let fieldsToShow: string = ''; //E.g.: [field1, field2, field3]
-        let fieldsToHide: string = ''; //E.g.: [field1, field2, field3]
+        let show: string = ''; //E.g.: [field1, field2, field3]
+        let hide: string = ''; //E.g.: [field1, field2, field3]
         let objFilteredTemp: any = [];
         let orderBy: any;
-        let route: string = params.route;
         let setGet: string = '';
         let where: any; //E.g.: [[field1, operator1, value1], [field2, operator2, value2], [field3, operator3, value3]]
         
@@ -359,7 +354,7 @@ export class CrudService {
           });
         }
 
-        if(params.fieldsToShow && params.fieldsToHide) {
+        if(params.show && params.hide) {
           reject({
             cod: "ra-02",
             message: "Informar erro ra-03 ao administrador"//Não pode declarar os dois parâmetros ao mesmo tempo
@@ -373,26 +368,26 @@ export class CrudService {
           });
         }
 
-        if(params.fieldsToShow) {
+        if(params.show) {
           setGet = "?";
-          fieldsToShow = "fieldsToShow=";
+          show = "show=";
           
-          for(let lim = params.fieldsToShow.length, i =0; i < lim; i++) {
-            fieldsToShow += params.fieldsToShow[i]+",";            
+          for(let lim = params.show.length, i =0; i < lim; i++) {
+            show += params.show[i]+",";            
           }
 
-          fieldsToShow = fieldsToShow.substring(0, fieldsToShow.length - 1);
+          show = show.substring(0, show.length - 1);
         }
 
-        if(params.fieldsToHide) {
+        if(params.hide) {
           setGet = "?";
-          fieldsToHide = "fieldsToHide=";
+          hide = "hide=";
           
-          for(let lim = params.fieldsToHide.length, i =0; i < lim; i++) {
-            fieldsToHide += params.fieldsToHide[i]+",";            
+          for(let lim = params.hide.length, i =0; i < lim; i++) {
+            hide += params.hide[i]+",";            
           }
 
-          fieldsToHide = fieldsToHide.substring(0, fieldsToHide.length - 1);
+          hide = hide.substring(0, hide.length - 1);
         }
         
         this.headersToAuth = new Headers({
@@ -406,33 +401,37 @@ export class CrudService {
         
         this.http
         .get(
-          apiUrl+route+setGet+fieldsToShow+fieldsToHide,
+          apiUrl+route+setGet+show+hide,
           this.optionsToAuth
         ).subscribe(res => {
           obj = JSON.parse(res['_body']);
           objFiltered = obj.data;
           objKeys = Object.keys(objFiltered);
           
-          if(params.fieldsToShow) {
+          if(params.show) {
             objFilteredTemp = obj.data;
             objFiltered = [];
             
             for(let lim = objFilteredTemp.length, i =0; i < lim; i++) {
               let temp = {};
 
-              for(let j = 0; j < params.fieldsToShow.length; j++) {
-                temp[params.fieldsToShow[j]] = objFilteredTemp[i][params.fieldsToShow[j]];
+              for(let j = 0; j < params.show.length; j++) {
+                temp[params.show[j]] = objFilteredTemp[i][params.show[j]];
               }
 
               objFiltered.push(temp);
             }
-            
+
+            obj = objFiltered;
+
             resolve({
-              objFiltered
+              obj
             });
           } else {
+            obj = objFiltered;
+            
             resolve({
-              objFiltered
+              obj
             });
           }
         })
@@ -888,16 +887,13 @@ export class CrudService {
         
         if(!route) { // Verifica se pelo menos uma child foi definida
           reject({
-            cod: "c-01",
+            cod: "u-01",
             message: "Informar erro c-01 ao administrador"
           });
         }
 
         this.headersToAuth = new Headers({
-          'Content-Type': 'multipart/form-data',
-          'Accept': 'application/json',
-          'Authorization': sessionStorage.getItem('access_token'),
-          'Access-Control-Allow-Origin': '*'
+          'Authorization': sessionStorage.getItem('access_token')
         });
 
         this.optionsToAuth = new RequestOptions({
@@ -911,8 +907,8 @@ export class CrudService {
           this.optionsToAuth
         ).subscribe(res => {
           resolve({
-            cod: "c-02",
-            message: "Upload feito com sucesso"//Cadastro feito com sucesso
+            cod: "u-02",
+            message: "Upload feito com sucesso"
           });
         })
       break;

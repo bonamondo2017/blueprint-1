@@ -21,7 +21,9 @@ import { MyValidators } from './../../../../shared/validators/my-validators';
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
+  arraySource: any;
   child = ['somethingsChild'];
+  public crudParams: any;
   isLoading = true;
   msg;
   somethingsChild: any;
@@ -43,7 +45,31 @@ export class FormComponent implements OnInit {
     public dialog: MdDialog,
     private myValidators: MyValidators
   ) {
+    
     /* formMultipleAutocompleteComponent Input start */
+    //Laravel
+    this.crudParams = {
+      route: 'users',
+      show: ['name', 'id']
+    }
+    /*
+    //Firebase
+    this.crudParams = {
+      source: 'firebase', 
+      child: 'people', 
+      show:['name']
+    };
+    */
+
+    //Array
+    this.crud.readArray('laravel', this.crudParams)
+    .then(res => {
+      this.arraySource = {
+        source: 'array', 
+        array: res
+      }
+    })
+
     this.class = "w100p";
     /* formMultipleAutocompleteComponent Input end */
 
@@ -63,7 +89,6 @@ export class FormComponent implements OnInit {
   
   create = () => {
     this.somethingChildObject = this.somethingChildForm.value;
-    console.log(this.somethingChildObject);
     /*if(this.somethingChildForm.valid){ // Verifica se o FormGroup é válido
       this.crud.create('firebase', {child: this.child, objectToPush: this.somethingChildObject}); // cadastra o product Class no banco
       this.somethingChild = undefined;
