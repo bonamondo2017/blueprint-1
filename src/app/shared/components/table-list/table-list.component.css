@@ -3,6 +3,11 @@ md-card {
     padding: 0;
 }
 
+/deep/ .mat-checkbox-inner-container {
+  background: #fff;
+  border-radius: 3px; 
+}
+
 table {
     width: 100%;
 }

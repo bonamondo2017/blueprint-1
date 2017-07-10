@@ -14,11 +14,17 @@ export class TableListComponent implements OnChanges, OnInit{
   @Input() list;
 
   arrayHeader: any = [];
+  arrayNoFilter: any = [];
   arraySource: any = [];
   arraySourceFinal: any = [];
   arraySourceSearch: any = [];
+  backgroundColor: string;
+  backgroundColorIndex: number;
   checkAllController: boolean = false;
   checkedItem: boolean = false;
+  color: string;
+  colorIndex: number;
+  editRoute: string;
   error: any = [];
   isLoadingList: boolean = true;
   msg: string;
@@ -28,6 +34,7 @@ export class TableListComponent implements OnChanges, OnInit{
   searchInput: boolean = false;
   selectedPageValue: number;
   selectedRowValue: number;
+  colorByData: any;
   testingThisShit: any;
   
   constructor(
@@ -47,10 +54,10 @@ export class TableListComponent implements OnChanges, OnInit{
       switch(this.list.source) {
         case 'firebase':
           if(this.list.child) {
-            if(this.list.childKeys) {
+            if(this.list.show) {
               this.crud.readArray('firebase', { 
                 child: this.list.child,
-                keys: this.list.childKeys
+                show: this.list.show
               })
               .then(res => {
                 this.isLoadingList = false;
@@ -61,7 +68,7 @@ export class TableListComponent implements OnChanges, OnInit{
                 }
               });            
             } else {
-              this.error = ['list.childKeys']  
+              this.error = ['list.show']  
             }
           } else {
             this.error = ['list.child']
@@ -74,6 +81,21 @@ export class TableListComponent implements OnChanges, OnInit{
             this.arraySource = this.list.array;
             this.filterArrayKey(this.arraySource);
             
+            /*if(this.list.colorByData) {
+              this.colorByData = this.list.colorByData.map((data) => {
+                let temp = [];
+                
+                temp = data;
+                
+                return temp;
+              })
+
+              console.log(this.colorByData)
+              for(let lim = this.list.colorByData.length, i =0; i < lim; i++) {
+                console.log(this.list.colorByData[i]);
+              }
+            }*/
+
             if(this.arraySource.length < 1) {
               this.msg = "Nada na lista";
             }
@@ -122,16 +144,68 @@ export class TableListComponent implements OnChanges, OnInit{
       this.pages[i] = i+1;
     }
     //Set pages array - find a better place for it ending
-
-    let filter = data.objFiltered.map((data) => {
+    
+    //Everything from array, ignoring property show from list object
+    let noFilter = data.map((data) => {
+      let backgroundColor;
+      let color;
+      let field;
+      let fieldValue;
       let temp = [];
-      for(let lim = this.list.childKeys.length, i = 0; i < lim; i++){
-        temp.push(data[this.list.childKeys[i]]);
+      
+      for(let lim = Object.keys(data).length, i = 0; i < lim; i++) {
+        field = Object.keys(data)[i];
+
+        for(let lim = this.list.colorByData.length, j =0; j < lim; j++) {          
+          if(field == this.list.colorByData[j]['field']) {
+            fieldValue = Object.keys(data)[i];
+            backgroundColor = this.list.colorByData[j]['backgroundColor'];
+            color = this.list.colorByData[j]['color'];
+            
+            if(this.list.colorByData[j]['fieldValue'] == data[fieldValue]) {
+              temp.push(data['backgroundColor'] = backgroundColor);
+              temp.push(data['color'] = color);
+            } else {
+              temp.push(data['backgroundColor'] = "#fff");
+              temp.push(data['color'] = "#000");
+            }
+
+            if(this.list.edit) {
+              console.log(174)
+            }
+
+            /**
+             * {{list.edit.route}}/{{}}
+             */
+          }
+        }
+        temp.push(data[field]);
       }
       
       return temp;
     })
 
+    //Filtered by property show in list object
+    let filter = data.map((data) => {
+      console.log(data)
+      let backgroundColor;
+      let color;
+      let field;
+      let fieldValue;
+      let temp = [];
+      
+      for(let lim = this.list.show.length, i = 0; i < lim; i++){
+        temp.push(data[this.list.show[i]]);
+        temp.push(data.color);
+        temp.push(data.backgroundColor);
+      }
+      
+      return temp;
+    })
+    
+    this.backgroundColorIndex = (filter.length);
+    this.colorIndex = (filter.length - 1);
+    this.arrayNoFilter = noFilter;
     this.arraySourceFinal = filter; 
     this.arraySourceSearch = filter;
   }
@@ -140,6 +214,7 @@ export class TableListComponent implements OnChanges, OnInit{
     let checkLoop = -1;
     let count;
     let data = this.arraySourceFinal;
+    let dataAny;
     let dataString;
     let search;
     let temp = [];
@@ -150,20 +225,33 @@ export class TableListComponent implements OnChanges, OnInit{
     } else {
       search = "";
     }
-    
-    for(let lim = data.length, i = 0; i < lim; i ++) {
-      for(let limj = (data[i].length), j = 0; j < limj; j++) {
-        dataString = data[i][j].toLowerCase();
-        count = dataString.search(search.toLowerCase());
-        
-        if(count !== -1) {
-          if(checkLoop != i) {
-            temp.push(data[i]);
-          }
+    switch(this.list.source) {
+      case 'firebase':
+        for(let lim = data.length, i = 0; i < lim; i ++) {
+          for(let limj = (data[i].length), j = 0; j < limj; j++) {
+            dataAny = data[i][j].toString();
+            dataString = dataAny.toLowerCase();
+            console.log(dataString);
+            count = dataString.search(search.toLowerCase());
+            
+            if(count !== -1) {
+              if(checkLoop != i) {
+                temp.push(data[i]);
+              }
 
-          checkLoop = i;
+              checkLoop = i;
+            }
+          }
         }
-      }
+      break;
+
+      case 'laravel':
+        let searchParams = { route: 'users', }
+        //this.crud.readArray('laravel', )
+      break;
+
+      default:
+        this.error = ['list.source'] ;
     }
 
     this.arraySourceSearch = temp;   

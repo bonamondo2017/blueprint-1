@@ -21,7 +21,7 @@
           <md-input-container *ngIf="searchInput">
             <input type="text" mdInput placeholder="Pesquisar" formControlName="search" (keyup)="search()">
           </md-input-container>
-
+          
           <md-icon *ngIf="toolbar.more">more_vert</md-icon>
         </form>
       </div>
@@ -44,16 +44,16 @@
       </tr>
 
       <tr class="list-item" *ngFor="let data of arraySourceSearch">
-        <td *ngIf="toolbar.delete">
-          <md-checkbox class="list-item" (change)="checkItem($event)" [checked]="checkAllController"></md-checkbox>
+        <td *ngIf="toolbar.delete" [ngStyle]="{'background-color': data[backgroundColorIndex], 'color': data[colorIndex]}">
+          <md-checkbox (change)="checkItem($event)" [checked]="checkAllController"></md-checkbox>
         </td>
 
-        <td *ngFor="let item of data;">
-          <span>{{ item }}</span>
+        <td *ngFor="let item of data; let i = index" [ngStyle]="{'background-color': data[backgroundColorIndex], 'color': data[colorIndex]}">
+          <span *ngIf="i != colorIndex && i != backgroundColorIndex"> {{ item }} </span>
         </td>
 
-        <td class="list-item-actions" *ngIf="list.edit">
-          <md-icon *ngIf="list.edit">edit</md-icon>
+        <td class="list-item-actions" *ngIf="list.edit" [ngStyle]="{'background-color': data[backgroundColorIndex], 'color': data[colorIndex]}">
+          <a *ngIf="list.edit" routerLink=""><md-icon>edit</md-icon></a>
         </td>
       </tr>
     </table>

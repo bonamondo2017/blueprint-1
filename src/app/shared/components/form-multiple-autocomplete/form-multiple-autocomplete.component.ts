@@ -52,16 +52,15 @@ export class FormMultipleAutocompleteComponent implements OnChanges, OnInit {
             let filter = this.array.obj.map(data => {
               let keys = Object.keys(data);
               let temp = [];
-              console.log(keys.length);
+              
               for(let lim = keys.length, i = 0; i < lim; i++) {
-                console.log(data.keys[i]);
+                temp[keys[i]] = data[keys[i]];
               }
-              console.log(temp);
+
               return temp;
             })
-            console.log(filter);
-            //this.arraySourceFinal = filter;
-            //this.filterArrayKey(this.array);
+            
+            this.filterArrayKey(filter);
           } else {
             this.error = ['arraySource.array']
           }
@@ -83,16 +82,15 @@ export class FormMultipleAutocompleteComponent implements OnChanges, OnInit {
     
   }
 
-  /*filterArrayKey(data){
-    console.log(data.objFiltered[0]);
-    let filter = data.objFiltered.map((data) => {
+  filterArrayKey(data){
+    let filter = data.map((data) => {
       let temp = [];
-      for(let lim = this.arraySource.childKeys.length, i = 0; i < lim; i++){
-        temp.push(data[this.arraySource.childKeys[i]]);
-      }
+      temp.push(data);
       return temp;
     })
 
+    console.log(filter);
+
     this.arraySourceFinal = filter; 
-  }*/
+  }
 }

@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.databaseInfo = {
-      source: 'laravel',
+      source: 'firebase',
       loginMode: 'emailAndPassword'
     }
   }

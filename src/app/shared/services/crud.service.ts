@@ -207,9 +207,9 @@ export class CrudService {
   })
 
   readArray = (source, params) => new Promise((resolve, reject) => {
-    let hide: any = params.hide;
-    var route: string = params.route;
-    let show: any = params.show;
+    let hide: any = ""; //E.g.: [field1, field2, field3]
+    let route: string = "";
+    let show: any = ""; //E.g.: [field1, field2, field3]
     
     switch(source) {
       case 'firebase':  
@@ -230,25 +230,27 @@ export class CrudService {
           });
         }
 
-        if(route) {
+        if(params.route) {
+          route = params.route;                 
+        } else {
           reject({
-            cod: "ra-02",
-            message: "Informar erro ra-02 ao administrador"//É preciso declarar ao menos um child"
+            cod: "ra-03",
+            message: "Informar erro ra-03 ao administrador"////É preciso declarar ao menos uma route
           });
         }
         
         if(orderByChild) {
           if(!params.equalTo) {
             reject({
-              cod: "ra-03",
-              message: "Informar erro ra-03 ao administrador"//É preciso declarar um equalTo referente ao orderByChild
+              cod: "ra-04",
+              message: "Informar erro ra-04 ao administrador"//É preciso declarar um equalTo referente ao orderByChild
             });
           }
 
           orderByChild = params.orderByChild;
           equalTo = params.equalTo;
         }
-
+        
         ref = fbDatabase.ref(route);
         
         if(orderByChild) {
@@ -265,26 +267,27 @@ export class CrudService {
                 obj[i].__key = key[i];
               }
 
-              if(params.keys) {
+              if(params.show) {
                 for(let i= 0; i < obj.length; i++) {
                   let temp = {};
 
-                  for(let j = 0; j < params.keys.length; j++) {
-                    temp[params.keys[j]] = obj[i][params.keys[j]];
+                  for(let j = 0; j < params.show.length; j++) {
+                    temp[params.show[j]] = obj[i][params.show[j]];
                   }
 
                   /*Object.keys(obj[i])
                   .map(k => {
-                    for(let j = 0; j < params.keys.length; j++) {
-                      if(k == params.keys[j]) {
+                    for(let j = 0; j < params.show.length; j++) {
+                      if(k == params.show[j]) {
                         temp[k] = obj[i][k];
                       }
                     }
                   })*/
                   objFiltered.push(temp);
                 }
-
+                
                 obj = objFiltered;
+                
                 resolve(obj);
               } else {
                 resolve(obj);
@@ -304,18 +307,18 @@ export class CrudService {
                 obj[i].__key = key[i];
               }
               
-              if(params.keys) {
+              if(params.show) {
                 for(let i= 0; i < obj.length; i++) {
                   let temp = {};
 
-                  for(let j = 0; j < params.keys.length; j++) {
-                    temp[params.keys[j]] = obj[i][params.keys[j]];
+                  for(let j = 0; j < params.show.length; j++) {
+                    temp[params.show[j]] = obj[i][params.show[j]];
                   }
 
                   /*Object.keys(obj[i])
                   .map(k => {
-                    for(let j = 0; j < params.keys.length; j++) {
-                      if(k == params.keys[j]) {
+                    for(let j = 0; j < params.show.length; j++) {
+                      if(k == params.show[j]) {
                         temp[k] = obj[i][k];
                       }
                     }
@@ -324,6 +327,7 @@ export class CrudService {
                 }
                 
                 obj = objFiltered;
+                console.log(res);
                 resolve(obj);
               } else {
                 resolve(obj);
@@ -340,8 +344,6 @@ export class CrudService {
 
       case "laravel":
         let apiUrl: string = this.url;
-        let show: string = ''; //E.g.: [field1, field2, field3]
-        let hide: string = ''; //E.g.: [field1, field2, field3]
         let objFilteredTemp: any = [];
         let orderBy: any;
         let setGet: string = '';
