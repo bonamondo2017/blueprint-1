@@ -1,0 +1,49 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th *ngIf="config?.permission?.delete">
+        <md-checkbox #inputSelectAll (change)="toogleSelectedAll($event.checked)"></md-checkbox>
+      </th>
+      <th *ngFor="let field of config?.fields" [class.td-sort]="config?.sort?.field == field.field">
+          <a mdTooltip="Ordenar pelo nome" (click)="changeSort(field.field)">
+            <span>  {{ field?.title }}</span>
+            <md-icon *ngIf="config?.sort?.order == 'asc' && config?.sort?.field == field.field">arrow_upward</md-icon>
+            <md-icon *ngIf="config?.sort?.order == 'desc' && config?.sort?.field == field.field">arrow_downward</md-icon>
+          </a>
+        </th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngIf="config?.isLoading">
+      <td class="loadingTable" colspan="10">
+        <md-progress-bar mode="indeterminate"></md-progress-bar>
+      </td>
+    </tr>
+    <tr *ngIf="!config?.isLoading && data?.length==0" >
+      <td class="feedbackTable" colspan="10">Nenhum concluinte encontrado</td>
+    </tr>
+
+    <tr *ngFor="let row of data" [ngStyle]="row.styleRow || {}">
+      <td *ngIf="config?.permission?.delete">
+        <md-checkbox></md-checkbox>
+      </td>
+      <td *ngFor="let field of config?.fields">
+        {{row[field.field]}}
+      </td>
+      <td>
+        <button *ngIf="config?.permission?.update || row.actionsRow?.update" md-icon-button (click)="edit(row.id)" class="button-edit" routerLink="['add', row.id]" mdTooltip="Editar">
+          <md-icon>edit</md-icon>
+        </button>
+        <button *ngIf="config?.permission?.view || row.actionsRow?.view" md-icon-button (click)="view(row.id)" linkRouter="['add', id]" class="button-edit" mdTooltip="Visualizar">
+          <md-icon>remove_red_eyes</md-icon>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<md-paginator #paginator [length]="config?.length"
+              [pageSize]="config?.pageSize"
+              [pageSizeOptions]="config?.pageSizeOptions"
+              (page)="changedPage($event)">
+</md-paginator>

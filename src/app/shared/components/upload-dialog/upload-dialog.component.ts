@@ -27,7 +27,7 @@ export class UploadDialogComponent implements OnInit {
     public dialogRef: MdDialogRef<any>,
     private http: Http
   ) {
-    this.data = this.dialogRef._containerInstance.dialogConfig.data;
+    //this.data = this.dialogRef._containerInstance.dialogConfig.data;
   }
 
   ngOnInit() {

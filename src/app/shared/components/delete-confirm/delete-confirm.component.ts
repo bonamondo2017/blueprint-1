@@ -20,7 +20,7 @@ export class DeleteConfirmComponent implements OnInit {
     private crud: CrudService
   ) {
     console.log(this.dialogRef);
-    this.dataToDelete = this.dialogRef._containerInstance.dialogConfig.data;
+    //this.dataToDelete = this.dialogRef._containerInstance.dialogConfig.data;
   }
 
   ngOnInit() {

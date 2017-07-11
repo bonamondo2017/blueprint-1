@@ -5,6 +5,7 @@ import { MaterialModule } from '@angular/material';
 import { Routes, RouterModule } from '@angular/router';
 
 /*Components*/
+import { DataListComponent } from './../../components/data-list/data-list.component';
 import { DeleteConfirmComponent } from './../../components/delete-confirm/delete-confirm.component';
 import { ForgotPasswordComponent } from './../../components/forgot-password/forgot-password.component';
 import { FormMultipleAutocompleteComponent } from './../../components/form-multiple-autocomplete/form-multiple-autocomplete.component';
@@ -40,6 +41,7 @@ import { TextMaskModule } from 'angular2-text-mask';
     TextMaskModule
   ],
   declarations: [
+    DataListComponent,
     DeleteConfirmComponent,
     ForgotPasswordComponent,
     FormMultipleAutocompleteComponent,
@@ -53,6 +55,7 @@ import { TextMaskModule } from 'angular2-text-mask';
   ],
   exports: [
     MaterialModule,
+    DataListComponent,
     DeleteConfirmComponent,
     ForgotPasswordComponent,
     FormMultipleAutocompleteComponent,
