@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import {  PageEvent } from '@angular/material';
 import { Router } from '@angular/router';
 
@@ -12,53 +12,135 @@ export class DataListComponent implements OnInit {
   @ViewChild('paginator') paginator;
   @Input('config') config: any;
   @Output('changed') changed: EventEmitter<any> = new EventEmitter();
+
   fieldsLength;
-  checkeds: any;
-  selected = [];
+  allSelected: boolean = false; 
   constructor(private router: Router){
   }
   ngOnInit() {
-    console.log(this.paginator);
+    /*Paginator*/
+    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
+
+    if(!this.config.paginatorPageIndex)
+      this.config.paginatorPageIndex = 1;
+
+    if(!this.config.paginatorPageSize) {
+      this.config.paginatorPageSize = 5;
+    } else {
+      this.config.paginatorPageSize = 10;
+      console.log("aqui");
+    }
+      
+      console.log(this.config);
+    if(!this.config.paginatorPageSizeOptions)
+      this.config.paginatorPageSizeOptions = [5, 10, 15, 20, 25];
+    /*Paginator end*/
+    
+    // colspan. O +1 é por conta do th de actions em cada linha, que sempre existirá
+    this.fieldsLength = this.config.fields.length + 1;  
+    
+    if(this.config.permission.delete) {
+      // colspan. O +2 é por conta do th de actions em cada linha, que sempre existirá, e da colunha
+      // de checkboxes que surgirá, para atender à action delete
+      this.fieldsLength += 1; 
+    }
+   
   }
-  ngOnChange(){    
+
+  ngOnChange() {
+    /*Paginator*/
+    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
+
+    if(!this.config.paginatorPageIndex)
+      this.config.paginatorPageIndex = 1;
+
+    if(!this.config.paginatorPageSize)
+      this.config.paginatorPageSize = 5;
+
+    if(!this.config.paginatorPageSizeOptions)
+      this.config.paginatorPageSizeOptions = [5, 10, 15, 20, 25];
+    /*Paginator end*/
+    
     this.data = this.data.map(row => {
-      row['checked'] = false;
+      row['_checked'] = false;
       return row;
     });
-
-    this.fieldsLength = this.config.fields.length + 1;
-
-    if(this.config.permission.length > 0) {
-      this.fieldsLength = this.config.fields.length + 2;
-    }
-
-    console.log(this.fieldsLength);
   }
 
-  changeSort(fieldName){
+  changeSort = (fieldName) => {
     if(this.config.sort.field == fieldName){
       this.config.sort.order = this.config.sort.order == "asc" ? "desc" : "asc";
     }
     this.config.sort.field = fieldName;
-    this.changed.emit();
+    this.changed.emit({type: 'sort', changed: this.config.sort});
   }
 
-  changedPage(pageEvent: PageEvent){
-    if(this.config.pageSize != pageEvent.pageSize ||
-      this.config.page != pageEvent.pageIndex + 1
+  changedPage = (pageEvent: PageEvent) => {
+    if(this.config.paginatorPageSize != pageEvent.pageSize ||
+      this.config.paginatorPageIndex != pageEvent.pageIndex + 1
     ){
-      this.config.pageSize = pageEvent.pageSize;
-      this.config.page = pageEvent.pageIndex + 1;
-      this.changed.emit(pageEvent);
+      this.config.paginatorPageSize = pageEvent.pageSize;
+      this.config.paginatorPageIndex = pageEvent.pageIndex + 1;
+      this.changed.emit({type: 'page', changed: pageEvent});
     }
   }
-  edit(id: any): any {
-    return  this.router.navigate(['add', id]);
+  
+  changedCheckbox = (rowIndex, event) => {
+    this.data[rowIndex]._checked = event.checked;
+
+    for(let lim = this.data.length, i = 0; i < lim; i++) {
+      if(!this.data[i]._checked) {
+        this.allSelected = false;
+        return this.triggerSelecteds();
+      }
+    }
+    this.allSelected = true;
+    return this.triggerSelecteds();
   }
 
-  view(id: any): any {
-    return  this.router.navigate(['view', id]);
+  toggleSelectAll = ($event) => {
+    this.allSelected = $event.checked;
+    for(let lim = this.data.length, i = 0; i < lim; i++) {
+      this.data[i]._checked = this.allSelected;
+    }
+    this.triggerSelecteds();
+  }
+  
+  triggerSelecteds(){
+    this.changed.emit({
+        type: 'selecteds', 
+        changed: this.data.filter(row => row._checked)
+    });
   }
 
+  edit = (rowIndex) => {
+    let defaultRoute = this.router.url;
+    let userRoute = this.config.editUrl
+    let route;
+    let defaultId = this.data[rowIndex]['id'];
+    let userId = this.data[rowIndex][this.config.editIdField]; 
+    let id;
 
+    this.config.editUrl ? route = userRoute : route = defaultRoute ;
+
+    this.config.editIdField ? id = userId : id = defaultId ;
+
+    this.router.navigate([route, id]);
+  }
+  
+
+  view = (rowIndex) => {
+    let defaultRoute = this.router.url + "/view";
+    let userRoute = this.config.viewUrl;
+    let route;
+    let defaultId = this.data[rowIndex]['id'];
+    let userId = this.data[rowIndex][this.config.viewIdField]; 
+    let id;
+
+    this.config.editUrl ? route = userRoute : route = defaultRoute ;
+
+    this.config.editIdField ? id = userId : id = defaultId ;
+      
+    this.router.navigate([route, id]);
+  }
 }

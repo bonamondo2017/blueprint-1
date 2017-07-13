@@ -71,7 +71,7 @@ export class ListComponent implements OnInit {
     this.configList = {
       length: null,
       isLoading: false,
-      permission: null, //{create: boolean, view: boolean, update: boolean, delete: boolean}
+      permission: null,
       pageSize: 5,
       pageSizeOptions: [5, 10, 15, 20, 25],
       page:1,
@@ -79,11 +79,24 @@ export class ListComponent implements OnInit {
         order: "asc",
         field: "id"
       },
+      editUrl: "/students",
+      editIdField: "id",
+      viewUrl: "/students/view",
+      viewIdField: "id",
       fields: [
         {field: "name", title: "Nome", sort: false},
-        {field: "uid", title: "COD", sort: false}        
+        {field: "id", title: "COD", sort: false},
+        {field: "unit", title: "Unidade"},
+        {field: "modality", title: "Modalidade"},
+        {field: "course", title: "Curso"},
+        {field: "class", title: "Turma"},
+        {field: "end_month", title: "Término"},
+        {field: "regional", title: "UF"}
       ]
     }
   }
-
+  
+  changed(event){
+    console.log(event.changed);
+  }
 }

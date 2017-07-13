@@ -1,4 +1,4 @@
 <p>
   <!--<table-list [toolbar]="{ title: 'Title', search: true, delete: true, more: true }" [list]="list"></table-list>-->
-  <data-list [data]="data" [config]="configList"></data-list>
+  <data-list [data]="data" [config]="configList" (changed)="changed($event)"></data-list>
 </p>

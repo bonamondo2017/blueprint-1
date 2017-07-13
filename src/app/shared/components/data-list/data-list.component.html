@@ -2,7 +2,7 @@
   <thead>
     <tr>
       <th *ngIf="config?.permission?.delete">
-        <md-checkbox #inputSelectAll (change)="toogleSelectedAll($event.checked)"></md-checkbox>
+        <md-checkbox (change)="toggleSelectAll($event)" [checked]="allSelected"></md-checkbox>
       </th>
       <th *ngFor="let field of config?.fields" [class.td-sort]="config?.sort?.field == field.field">
           <a mdTooltip="Ordenar pelo nome" (click)="changeSort(field.field)">
@@ -16,34 +16,36 @@
   </thead>
   <tbody>
     <tr *ngIf="config?.isLoading">
-      <td class="loadingTable" colspan="10">
+      <td class="loadingTable" [attr.colspan]="fieldsLength">
         <md-progress-bar mode="indeterminate"></md-progress-bar>
       </td>
     </tr>
     <tr *ngIf="!config?.isLoading && data?.length==0" >
-      <td class="feedbackTable" colspan="10">Nenhum concluinte encontrado</td>
+      <td class="feedbackTable" [attr.colspan]="fieldsLength">Nenhum concluinte encontrado</td>
     </tr>
-
-    <tr *ngFor="let row of data" [ngStyle]="row.styleRow || {}">
+    <tr *ngFor="let row of data; let i = index;" [ngStyle]="row.styleRow || {}">
       <td *ngIf="config?.permission?.delete">
-        <md-checkbox></md-checkbox>
+        <md-checkbox [checked]="row._checked" (change)="changedCheckbox(i, $event)"></md-checkbox>
       </td>
       <td *ngFor="let field of config?.fields">
         {{row[field.field]}}
       </td>
       <td>
-        <button *ngIf="config?.permission?.update || row.actionsRow?.update" md-icon-button (click)="edit(row.id)" class="button-edit" routerLink="['add', row.id]" mdTooltip="Editar">
+        <button md-icon-button *ngIf="row.actionsRow?.update || (config?.permission?.update && row.actionsRow?.update == undefined)"
+                class="button-edit" (click)="edit(i)" mdTooltip="Editar">
+                
           <md-icon>edit</md-icon>
         </button>
-        <button *ngIf="config?.permission?.view || row.actionsRow?.view" md-icon-button (click)="view(row.id)" linkRouter="['add', id]" class="button-edit" mdTooltip="Visualizar">
+        <button md-icon-button *ngIf="row.actionsRow?.update || (config?.permission?.view && row?.actionsRow?.view == undefined)"
+                (click)="view(i)" linkRouter="['add', id]" class="button-edit" mdTooltip="Visualizar">
           <md-icon>remove_red_eyes</md-icon>
         </button>
       </td>
     </tr>
   </tbody>
 </table>
-<md-paginator #paginator [length]="config?.length"
-              [pageSize]="config?.pageSize"
-              [pageSizeOptions]="config?.pageSizeOptions"
+<md-paginator #paginator [length]="config?.paginatorLength"
+              [pageSize]="config?.paginatorPageSize"
+              [pageSizeOptions]="config?.paginatorPageSizeOptions"
               (page)="changedPage($event)">
 </md-paginator>
