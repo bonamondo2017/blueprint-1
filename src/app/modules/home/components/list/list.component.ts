@@ -21,14 +21,14 @@ export class ListComponent implements OnInit {
     private crud: CrudService
   ) {
     //Firebase
-    this.crudParams = {
-      route: 'people'
-    }
-
-    /*//Laravel
-    this.crudParams = {
-      route: 'users'
+    /*this.crudParams = {
+      route: 'productsClass'
     }*/
+
+    //Laravel
+    this.crudParams = {
+      route: 'students'
+    }
 
     /*TO COMPONENT BONAMONDO-TABLE-LIST
     //Eliminate crud service and everything envolved
@@ -53,46 +53,27 @@ export class ListComponent implements OnInit {
     })*/
 
     /* TO COMPONENT DATA-LIST */
-    this.crud.readArray('firebase', this.crudParams)
+    this.crud.readArray('laravel', this.crudParams)
     .then(res => {
       this.data = res;
+
+      this.data = this.data.obj;
       
       for(let lim = Object.keys(this.data).length, i = 0; i < lim; i++) {
-        if(this.data[i].uid === "Zk5DbpCX3MRl4klQT4ioMQySRep2") {
+        if(this.data[i].id === "Zk5DbpCX3MRl4klQT4ioMQySRep2") {
           this.data[i]['styleRow'] = {backgroundColor: "pink"};
         }
       }
-      
-      console.log(this.data);
     })
   }
 
   ngOnInit() {
     this.configList = {
-      length: null,
-      isLoading: false,
-      permission: null,
-      pageSize: 5,
-      pageSizeOptions: [5, 10, 15, 20, 25],
-      page:1,
-      sort: {
-        order: "asc",
-        field: "id"
-      },
-      editUrl: "/students",
-      editIdField: "id",
-      viewUrl: "/students/view",
-      viewIdField: "id",
+      permission: {delete: true, edit: false, update: true}, //obrigatório
       fields: [
         {field: "name", title: "Nome", sort: false},
-        {field: "id", title: "COD", sort: false},
-        {field: "unit", title: "Unidade"},
-        {field: "modality", title: "Modalidade"},
-        {field: "course", title: "Curso"},
-        {field: "class", title: "Turma"},
-        {field: "end_month", title: "Término"},
-        {field: "regional", title: "UF"}
-      ]
+        {field: "id", title: "COD", sort: false}
+      ] //obrigatório
     }
   }
   

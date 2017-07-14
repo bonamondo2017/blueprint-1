@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, DoCheck, Input, OnInit, OnChanges, Output, EventEmitter, ViewChild } from '@angular/core';
 import {  PageEvent } from '@angular/material';
 import { Router } from '@angular/router';
 
@@ -7,16 +7,18 @@ import { Router } from '@angular/router';
   templateUrl: './data-list.component.html',
   styleUrls: ['./data-list.component.css']
 })
-export class DataListComponent implements OnInit {
-  @Input('data') data:any[] = null;
+export class DataListComponent implements OnInit, OnChanges, DoCheck {
+  @Input('data') data:any[];
   @ViewChild('paginator') paginator;
   @Input('config') config: any;
   @Output('changed') changed: EventEmitter<any> = new EventEmitter();
 
-  fieldsLength;
+  fieldsLength: any;
   allSelected: boolean = false; 
+
   constructor(private router: Router){
   }
+
   ngOnInit() {
     /*Paginator*/
     this.paginator._intl.itemsPerPageLabel = 'Registros por página';
@@ -24,47 +26,62 @@ export class DataListComponent implements OnInit {
     if(!this.config.paginatorPageIndex)
       this.config.paginatorPageIndex = 1;
 
-    if(!this.config.paginatorPageSize) {
+    if(!this.config.paginatorPageSize) 
       this.config.paginatorPageSize = 5;
-    } else {
-      this.config.paginatorPageSize = 10;
-      console.log("aqui");
-    }
-      
-      console.log(this.config);
+    
     if(!this.config.paginatorPageSizeOptions)
       this.config.paginatorPageSizeOptions = [5, 10, 15, 20, 25];
     /*Paginator end*/
-    
-    // colspan. O +1 é por conta do th de actions em cada linha, que sempre existirá
-    this.fieldsLength = this.config.fields.length + 1;  
-    
-    if(this.config.permission.delete) {
-      // colspan. O +2 é por conta do th de actions em cada linha, que sempre existirá, e da colunha
-      // de checkboxes que surgirá, para atender à action delete
-      this.fieldsLength += 1; 
-    }
-   
   }
 
-  ngOnChange() {
-    /*Paginator*/
-    this.paginator._intl.itemsPerPageLabel = 'Registros por página';
+  ngDoCheck () {
+    if(this.data) {
+      this.data = this.data.map(row => {
+        row['_checked'] = false;
+        return row;
+      });
 
-    if(!this.config.paginatorPageIndex)
-      this.config.paginatorPageIndex = 1;
+      /**
+       * DEFAULT VALUES
+       */
+      /*Paginator*/
+      this.paginator._intl.itemsPerPageLabel = 'Registros por página';
 
-    if(!this.config.paginatorPageSize)
-      this.config.paginatorPageSize = 5;
+      if(!this.config.paginatorLength)
+        this.config.paginatorLength = this.data.length;
 
-    if(!this.config.paginatorPageSizeOptions)
-      this.config.paginatorPageSizeOptions = [5, 10, 15, 20, 25];
-    /*Paginator end*/
-    
-    this.data = this.data.map(row => {
-      row['_checked'] = false;
-      return row;
-    });
+      if(!this.config.paginatorPageIndex)
+        this.config.paginatorPageIndex = 1;
+
+      if(!this.config.paginatorPageSize)
+        this.config.paginatorPageSize = 5;
+
+      if(!this.config.paginatorPageSizeOptions)
+        this.config.paginatorPageSizeOptions = [5, 10, 15, 20, 25];
+      /*Paginator end*/
+
+      if(!this.config.isLoading)
+        this.config.isLoading = false;
+
+      if(!this.config.sort)
+        this.config.sort = { order: "asc", field: "id" };
+    }
+    /**
+     * DEFAULT VALUES END
+     */
+  }
+
+  ngOnChanges() {
+    if(this.config) {
+      // colspan. O +1 é por conta do th de actions em cada linha, que sempre existirá
+      this.fieldsLength = this.config.fields.length + 1;
+      
+      if(this.config.permission.delete) {
+        // colspan. O +2 é por conta do th de actions em cada linha, que sempre existirá, e da colunha
+        // de checkboxes que surgirá, para atender à action delete
+        this.fieldsLength += 1; 
+      }
+    }
   }
 
   changeSort = (fieldName) => {
@@ -127,7 +144,6 @@ export class DataListComponent implements OnInit {
 
     this.router.navigate([route, id]);
   }
-  
 
   view = (rowIndex) => {
     let defaultRoute = this.router.url + "/view";

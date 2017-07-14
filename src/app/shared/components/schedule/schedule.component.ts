@@ -2,14 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MdDialog, MdDialogClose } from '@angular/material';
 
 /*Components*/
-import { UploadDialogComponent } from './../upload-dialog/upload-dialog.component';
+import { ScheduleDialogComponent } from './../schedule-dialog/schedule-dialog.component';
 
 @Component({
-  selector: 'bonamondo-upload',
-  templateUrl: './upload.component.html',
-  styleUrls: ['./upload.component.css']
+  selector: 'bonamondo-schedule',
+  templateUrl: './schedule.component.html',
+  styleUrls: ['./schedule.component.css']
 })
-export class UploadComponent implements OnInit {
+export class ScheduleComponent implements OnInit {
   @Input() view: string;
 
   constructor(
@@ -25,7 +25,7 @@ export class UploadComponent implements OnInit {
   
   upload = () => {
     let dialogRef = this.dialog.open(
-      UploadDialogComponent,
+      ScheduleDialogComponent,
       {
         data: {
           dialogText: this.view['dialogText'],

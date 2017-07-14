@@ -368,17 +368,19 @@ export class CrudService {
             cod: "ra-03",
             message: "Informar erro ra-04 ao administrador"//É preciso declarar a rota do serviço
           });
+        } else {
+          route = params.route;
         }
 
         if(params.show) {
           setGet = "?";
-          show = "show=";
+          show = "show=[";
           
           for(let lim = params.show.length, i =0; i < lim; i++) {
             show += params.show[i]+",";            
           }
 
-          show = show.substring(0, show.length - 1);
+          show = show.substring(0, show.length - 1)+"]";
         }
 
         if(params.hide) {
@@ -400,7 +402,7 @@ export class CrudService {
         this.optionsToAuth = new RequestOptions({
           'headers': this.headersToAuth
         })
-        
+        console.log(apiUrl+route+setGet+show);
         this.http
         .get(
           apiUrl+route+setGet+show+hide,

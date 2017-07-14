@@ -11,6 +11,8 @@ import { ForgotPasswordComponent } from './../../components/forgot-password/forg
 import { FormMultipleAutocompleteComponent } from './../../components/form-multiple-autocomplete/form-multiple-autocomplete.component';
 import { LoginComponent } from './../../components/login/login.component';
 import { PageNotFoundComponent } from './../../components/page-not-found/page-not-found.component';
+import { ScheduleComponent } from './../../components/schedule/schedule.component';
+import { ScheduleDialogComponent } from './../../components/schedule-dialog/schedule-dialog.component';
 import { TableListComponent } from './../../components/table-list/table-list.component';
 import { UploadComponent } from './../../components/upload/upload.component';
 import { UploadDialogComponent } from './../../components/upload-dialog/upload-dialog.component';
@@ -48,6 +50,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     FormMultipleselectAutocompleteDirective,
     LoginComponent,
     PageNotFoundComponent,
+    ScheduleComponent,
+    ScheduleDialogComponent,
     SearchByNamePipe,
     TableListComponent,
     UploadComponent,
@@ -62,6 +66,8 @@ import { TextMaskModule } from 'angular2-text-mask';
     FormMultipleselectAutocompleteDirective,
     LoginComponent,
     PageNotFoundComponent,
+    ScheduleComponent,
+    ScheduleDialogComponent,
     SearchByNamePipe,
     TableListComponent,
     UploadComponent,
@@ -75,6 +81,7 @@ import { TextMaskModule } from 'angular2-text-mask';
   entryComponents: [
     DeleteConfirmComponent,
     ForgotPasswordComponent,
+    ScheduleDialogComponent,
     UploadDialogComponent
   ]
 })

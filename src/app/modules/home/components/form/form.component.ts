@@ -126,13 +126,12 @@ export class FormComponent implements OnInit {
   readSomethingsChild = () => {
     this.crud.readArray('laravel', this.crudParams)
     .then(res => {
-      console.log(res['obj']);
       if(res['cod'] == "ra-03") {
         this.msg = res['message'];
         this.isLoading = false;
       } else {
         this.msg = undefined;
-        this.somethingsChild = res;
+        this.somethingsChild = res['obj'];
         this.isLoading = false;
       }
     })

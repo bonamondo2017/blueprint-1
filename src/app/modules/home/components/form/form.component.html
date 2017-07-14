@@ -38,7 +38,11 @@
     </md-card>
 
     <md-card>
-      <bonamondo-upload [visual]="{text: 'Fazer upload', dialogText: 'Adicionar algo'}"></bonamondo-upload>
+      <bonamondo-upload [view]="{text: 'Fazer upload', dialogText: 'Adicionar algo'}"></bonamondo-upload>
+    </md-card>
+
+    <md-card>
+      <bonamondo-schedule [view]="{text: 'Adicionar agendamento', dialogText: 'Adicionar algo'}"></bonamondo-schedule>
     </md-card>
 
     <md-card>
@@ -68,10 +72,10 @@
     <span *ngIf="!isLoading && !somethingsChild"> There is nothing in this list </span>
     <div *ngFor="let somethingChild of somethingsChild; let i = index;">
       <span *ngIf="!isLoading" class="w80p">
-        <a (click)="delete(somethingChild[i].id)">
+        <a (click)="delete(somethingChild.id)">
           <md-icon>delete_forever</md-icon>
         </a>
-        <a (click)="readSomethingChild(somethingChild[i].name)">{{ somethingChild[i].name }}</a>        
+        <a (click)="readSomethingChild(somethingChild.name)">{{ somethingChild.name }}</a>        
       </span>
     </div>
   </md-card>
